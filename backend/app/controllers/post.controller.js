@@ -73,7 +73,31 @@ exports.onePost = async (req, res, next) => {
 };
 
 exports.myPosts = async (req, res, next) => {
-  console.log(req);
+  let userId;
+  console.log('Test', req.body);
+  if (req) {
+    const token = req.headers['x-access-token'];
+    const decoded = await jwt.verify(token, config.secret);
+    userId = await User.findByPk(decoded.id);
+  } else {
+    userId = null;
+  }
+
+  try {
+    const allPostsDb = await Post.findAll({
+      attributes: ['post_id'],
+      where: { author: userId.user_id },
+      raw: true
+    });
+
+    Promise.all(allPostsDb).then((values) => {
+      let result = values;
+
+      return res.status(200).json(result);
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.updatePost = async (req, res, next) => {
@@ -82,6 +106,9 @@ exports.updatePost = async (req, res, next) => {
 
 exports.deletePost = async (req, res, next) => {
   console.log(req);
+  Like.destroy({
+    where: { postId: req.params.id }
+  });
 };
 
 exports.allComments = async (req, res, next) => {
@@ -113,7 +140,7 @@ exports.oneComment = async (req, res, next) => {
 };
 exports.createComments = async (req, res, next) => {
   let userId;
-  console.log('Test', req.body);
+
   if (req) {
     const token = req.headers['x-access-token'];
     const decoded = await jwt.verify(token, config.secret);

@@ -15,7 +15,6 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import { register } from '../actions/auth';
 import MessageComp from './message.component';
-import { setMessage } from './../actions/message';
 
 const styles = () => ({
   root: {

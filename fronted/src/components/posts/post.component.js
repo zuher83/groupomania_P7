@@ -24,11 +24,10 @@ import {
 import IconButton from '@material-ui/core/IconButton';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { MoreVert } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/styles';
 
-const styles = (theme) => ({
+const styles = () => ({
   root: {
     minWidth: 275,
     marginTop: 20,
@@ -46,13 +45,16 @@ const styles = (theme) => ({
   }
 });
 
+/**
+ * Component permettant d'afficher un post dans une liste de posts
+ *
+ * @class OnePost
+ * @extends {Component}
+ */
 class OnePost extends Component {
   constructor(props) {
     super(props);
     this.handleExpandClick = this.handleExpandClick.bind(this);
-    // this.setActivePost = this.setActivePost.bind(this);
-    // this.likeDislike = this.likeDislike.bind(this);
-    // this.handleExpandClick = this.handleExpandClick.bind(this);
 
     this.state = {
       currentPost: {
@@ -72,12 +74,23 @@ class OnePost extends Component {
     };
   }
 
+  /**
+   * On charge le post et vérifie le role de l'utilisateur actuel
+   *
+   * @memberof OnePost
+   */
   componentDidMount() {
     this.getPost(this.props.postId);
     const user = JSON.parse(localStorage.getItem('user'));
     this.setState({ currentUserRole: user.roles[0] });
   }
 
+  /**
+   * Charge un post unique pour la liste
+   *
+   * @param {*} postId
+   * @memberof OnePost
+   */
   getPost(postId) {
     ContentService.onePost(postId)
       .then((response) => {
@@ -92,6 +105,12 @@ class OnePost extends Component {
       });
   }
 
+  /**
+   * Ov chercher les données de l'auteur
+   *
+   * @param {*} userId
+   * @memberof OnePost
+   */
   getUser(userId) {
     UserService.getProfile(userId)
       .then((response) => {
@@ -105,6 +124,12 @@ class OnePost extends Component {
       });
   }
 
+  /**
+   * On compte les commentaires
+   *
+   * @param {*} postId
+   * @memberof OnePost
+   */
   countComments(postId) {
     ContentService.allComments(postId)
       .then((response) => {
@@ -117,12 +142,23 @@ class OnePost extends Component {
       });
   }
 
+  /**
+   * Permet d'ouvrir la liste des commentaire en dessous du post
+   *
+   * @memberof OnePost
+   */
   handleExpandClick() {
     this.setState({
       expanded: true
     });
   }
 
+  /**
+   * Rendu du component
+   *
+   * @return {*}
+   * @memberof OnePost
+   */
   render() {
     const { classes } = this.props;
     let dateCreate = '';

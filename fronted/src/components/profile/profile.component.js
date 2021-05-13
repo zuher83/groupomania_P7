@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import UserService from './../../services/user.service';
 import { editProfile } from '../../actions/auth';
+import MyPosts from './../posts/post-my.component';
 
 import {
   Avatar,
@@ -38,7 +39,8 @@ const styles = () => ({
     minWidth: 275,
     '& .MuiTextField-root': {
       margin: 8
-    }
+    },
+    marginTop: 20
   },
   avatarWrapper: {
     position: 'relative'
@@ -172,7 +174,6 @@ class Profile extends Component {
    * @memberof Profile
    */
   handleChange(e) {
-    console.log(e);
     if (e.target) {
       const { name, value } = e.target;
       this.setState({
@@ -327,7 +328,7 @@ class Profile extends Component {
     return (
       <Fragment>
         <CssBaseline />
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" className={classes.root}>
           <Grid item xs={8}>
             <Card>
               <CardMedia
@@ -392,6 +393,7 @@ class Profile extends Component {
                 </Fab>
               </CardContent>
             </Card>
+            <MyPosts />
           </Grid>
           <Grid item xs={4}></Grid>
         </Container>

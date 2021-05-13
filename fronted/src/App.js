@@ -42,6 +42,13 @@ const styles = () => ({
     textDecoration: 'none'
   }
 });
+
+/**
+ * Racine de l'application
+ *
+ * @class App
+ * @extends {Component}
+ */
 class App extends Component {
   constructor(props) {
     super(props);
@@ -53,25 +60,35 @@ class App extends Component {
       anchorEl: null
     };
 
-    history.listen((location) => {
+    history.listen(() => {
       props.dispatch(clearMessage());
     });
   }
 
+  /**
+   * On charge l'utilisateur dans le state
+   *
+   * @memberof App
+   */
   componentDidMount() {
     const user = this.props.user;
 
     if (user) {
       this.setState({
         currentUser: user,
-        showModeratorBoard: user.roles.includes('ROLE_MODERATOR'),
-        showAdminBoard: user.roles.includes('ROLE_ADMIN'),
         anchorEl: null,
         open: Boolean(this.state.anchorEl)
       });
     }
   }
 
+  /**
+   * Rendu avec les routes public et privé
+   * On vérifie si le user est connecté pour afficher la barre de menu
+   *
+   * @return {*}
+   * @memberof App
+   */
   render() {
     const { classes, isLoggedIn } = this.props;
 

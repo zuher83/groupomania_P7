@@ -31,7 +31,7 @@ class ContentService {
   }
 
   deletePost(postId) {
-    return axios.delete(API_URL + 'posts-delete/', +postId, {
+    return axios.delete(API_URL + `posts-delete/${postId}`, {
       headers: authHeader()
     });
   }

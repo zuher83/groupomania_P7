@@ -39,6 +39,18 @@ export const retrieveAllPosts = () => async (dispatch) => {
   }
 };
 
+export const retrieveMyPosts = () => async (dispatch) => {
+  try {
+    const res = await ContentService.myPosts();
+    dispatch({
+      type: RETRIEVE_POSTS,
+      payload: res.data
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const retrieveOnePost = (postId) => async (dispatch) => {
   try {
     const res = await ContentService.onePost(postId);

@@ -8,7 +8,7 @@ import { Favorite } from '@material-ui/icons';
 import { withStyles } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
 
-const styles = (theme) => ({
+const styles = () => ({
   like: {
     color: 'red'
   },
