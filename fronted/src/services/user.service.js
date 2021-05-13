@@ -1,0 +1,78 @@
+import axios from 'axios';
+import authHeader from './auth-header';
+
+const API_URL = 'http://localhost:3000/api/';
+
+class UserService {
+  getPublicContent() {
+    return axios.get(API_URL + 'public');
+  }
+
+  getHome() {
+    return axios.get(API_URL + 'home', { headers: authHeader() });
+  }
+
+  getUserBoard() {
+    return axios.get(API_URL + 'user', { headers: authHeader() });
+  }
+
+  updateProfile(userId, data) {
+    return axios.put(API_URL + `user-update/${userId}`, data, {
+      headers: authHeader()
+    });
+  }
+
+  updateProfileImage(userId, data) {
+    console.log(data);
+    let headers = authHeader();
+    headers['Content-Type'] = 'multipart/form-data';
+    return axios.put(API_URL + `user-update/${userId}`, data, {
+      headers
+    });
+  }
+
+  getProfile(userId) {
+    return axios.get(API_URL + `user/${userId}`, {
+      headers: authHeader()
+    });
+  }
+
+  getMyProfile() {
+    return axios.get(API_URL + 'me', {
+      headers: authHeader()
+    });
+  }
+
+  getAllProfile() {
+    return axios.get(API_URL + 'users', {
+      headers: authHeader()
+    });
+  }
+
+  // Follow call Api
+  followUnfollowPost(data) {
+    return axios.post(API_URL + 'follow', data, {
+      headers: authHeader()
+    });
+  }
+
+  followUnfollowDelete(userId) {
+    return axios.delete(API_URL + `follow/${userId}`, {
+      headers: authHeader()
+    });
+  }
+
+  FollowUnfollowGet(userId) {
+    return axios.get(API_URL + `follow/${userId}`, {
+      headers: authHeader()
+    });
+  }
+
+  FollowUnfollowAllGet() {
+    return axios.get(API_URL + 'follow', {
+      headers: authHeader()
+    });
+  }
+}
+
+export default new UserService();

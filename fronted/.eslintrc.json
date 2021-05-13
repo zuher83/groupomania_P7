@@ -1,0 +1,45 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "eslint-config-prettier"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "spread": true,
+      "restParams": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "allowImportExportEverywhere": true
+    // "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "eslint-plugin-react-hooks",
+    "eslint-plugin-prettier",
+    "@babel"
+  ],
+  "rules": {
+    "prettier/prettier": "warn",
+    "linebreak-style": [2, "unix"],
+    "arrow-parens": ["error", "always"],
+    "arrow-body-style": [2, "as-needed"],
+    "no-unused-vars": "warn",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/imports-first": 0,
+    "import/newline-after-import": 0,
+    "import/no-dynamic-require": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-named-as-default": 0,
+    "import/prefer-default-export": 0,
+    "react/prop-types": 0
+  }
+}
