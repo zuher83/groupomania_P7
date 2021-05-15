@@ -1,5 +1,6 @@
 const config = require('../config/auth.config');
 var jwt = require('jsonwebtoken');
+const Sequelize = require('sequelize');
 
 const db = require('../models/index');
 const User = db.users;
@@ -25,8 +26,23 @@ exports.moderatorBoard = (req, res) => {
 };
 
 exports.allUsers = async (req, res, next) => {
-    allUsers = await User.findAll({ raw: true });
-    return res.status(200).send(allUsers);
+  let userId;
+  if (req) {
+    const token = req.headers['x-access-token'];
+    const decoded = await jwt.verify(token, config.secret);
+    userId = await User.findByPk(decoded.id);
+  } else {
+    userId = null;
+  }
+  allUsers = await User.findAll({
+    where: {
+      user_id: {
+        [Sequelize.Op.not]: userId.user_id
+      }
+    },
+    raw: true
+  });
+  return res.status(200).send(allUsers);
 };
 
 exports.myProfile = async (req, res, next) => {
@@ -35,7 +51,6 @@ exports.myProfile = async (req, res, next) => {
     const token = req.headers['x-access-token'];
     const decoded = await jwt.verify(token, config.secret);
     userId = await User.findByPk(decoded.id);
-    console.log('user', userId);
     return res.status(200).send(userId);
   } else {
     return res.status(500).send('Utilisateur non trouvé!');
@@ -55,7 +70,6 @@ exports.userGet = async (req, res, next) => {
 exports.userUpdate = (req, res, next) => {
   const id = req.params.id;
   var datas = req.body;
-  console.log(req.body);
   if (req.file) {
     if (req.file.fieldname === 'image') {
       var datas = {
@@ -79,7 +93,7 @@ exports.userUpdate = (req, res, next) => {
     .then((user) => {
       if (user == 1) {
         return res.status(200).send({
-          message: 'Profil de Admin mis à jour.'
+          message: 'Profil Admin mis à jour.'
         });
       } else {
         return res.status(200).send({
@@ -93,5 +107,4 @@ exports.userUpdate = (req, res, next) => {
       });
     });
 
-  res.status(200).send({ message: 'Profil mis à jour!' });
 };
