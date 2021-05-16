@@ -52,6 +52,13 @@ module.exports = function(sequelize, DataTypes) {
           { name: "follower_id" },
         ]
       },
+      {
+        name: "user_relation_followed",
+        using: "BTREE",
+        fields: [
+          { name: "user_id" },
+        ]
+      },
     ]
   });
 };

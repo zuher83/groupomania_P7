@@ -7,18 +7,26 @@ verifyToken = (req, res, next) => {
   let token = req.headers['x-access-token'];
 
   if (!token) {
-    return res.status(403).send({
+    res.status(403).json({
       message: 'Accès non authorisé! Veuillez vous connecter!'
     });
   }
 
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
-      return res.status(401).send({
-        message: 'Non autorisé!'
-      });
+      if (err.name === 'TokenExpiredError') {
+        res.status(511).json({
+          message: 'Session expiré!'
+        });
+      } else {
+        res.status(401).json({
+          message: 'Non autorisé!'
+        });
+      }
     }
-    req.userId = decoded.id;
+    if (decoded !== undefined) {
+      req.userId = decoded.id;
+    }
     next();
   });
 };
@@ -33,7 +41,7 @@ isAdmin = (req, res, next) => {
         }
       }
 
-      res.status(403).send({
+      res.status(403).json({
         message: 'Require Admin Role!'
       });
       return;
@@ -51,7 +59,7 @@ isModerator = (req, res, next) => {
         }
       }
 
-      res.status(403).send({
+      res.status(403).json({
         message: 'Require Moderator Role!'
       });
     });
@@ -73,7 +81,7 @@ isModeratorOrAdmin = (req, res, next) => {
         }
       }
 
-      res.status(403).send({
+      res.status(403).json({
         message: 'Le rôle Modérateur ou Admin est requis!'
       });
     });

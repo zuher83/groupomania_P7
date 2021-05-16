@@ -23,11 +23,6 @@ app.use(express.urlencoded({ extended: true }));
 const sequelize = require('./app/models/connection-Db');
 
 sequelize.sync();
-// force: true will drop the table if it already exists
-// db.sequelize.sync({force: true}).then(() => {
-//   console.log('Drop and Resync Database with { force: true }');
-//   initial();
-// });
 
 app.get('/', (req, res) => {
   res.json({ message: 'Bienvenu chez groupomania.' });
@@ -39,7 +34,6 @@ require('./app/routes/user.routes')(app);
 require('./app/routes/post.routes')(app);
 require('./app/routes/follow.routes')(app);
 
-// app.use('/public/images', express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, '/public')));
 
 const PORT = process.env.PORT || 3000;
