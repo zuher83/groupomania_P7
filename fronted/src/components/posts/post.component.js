@@ -5,6 +5,7 @@ import UserService from '../../services/user.service';
 import LikeUnlike from './../likeDislike';
 import CommentForm from './../comments/comment-form.component';
 import CommentList from './../comments/comment-list.component';
+import CommentCount from './../comments/comment-count.component';
 
 // import { Link } from 'react-router-dom';
 import clsx from 'clsx';
@@ -52,6 +53,8 @@ const styles = () => ({
  * @extends {Component}
  */
 class OnePost extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.handleExpandClick = this.handleExpandClick.bind(this);
@@ -67,7 +70,6 @@ class OnePost extends Component {
       },
       author_name: '',
       author_image: '',
-      count_comments: 0,
       currentIndex: -1,
       expanded: false,
       currentUserRole: 'ROLE_USER'
@@ -80,9 +82,17 @@ class OnePost extends Component {
    * @memberof OnePost
    */
   componentDidMount() {
+    this._isMounted = true;
+
     this.getPost(this.props.postId);
     const user = JSON.parse(localStorage.getItem('user'));
-    this.setState({ currentUserRole: user.roles[0] });
+    this.setState({
+      currentUserRole: user.roles[0]
+    });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   /**
@@ -94,11 +104,13 @@ class OnePost extends Component {
   getPost(postId) {
     ContentService.onePost(postId)
       .then((response) => {
-        this.setState({
-          currentPost: response.data
-        });
+        if (this._isMounted) {
+          this.setState({
+            currentPost: response.data
+          });
+        }
+
         this.getUser(response.data.author);
-        this.countComments(postId);
       })
       .catch((e) => {
         console.log(e);
@@ -114,28 +126,12 @@ class OnePost extends Component {
   getUser(userId) {
     UserService.getProfile(userId)
       .then((response) => {
-        this.setState({
-          author_name: response.data.name + ' ' + response.data.last_name,
-          author_image: response.data.image
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
-
-  /**
-   * On compte les commentaires
-   *
-   * @param {*} postId
-   * @memberof OnePost
-   */
-  countComments(postId) {
-    ContentService.allComments(postId)
-      .then((response) => {
-        this.setState({
-          count_comments: response.data.length
-        });
+        if (this._isMounted) {
+          this.setState({
+            author_name: response.data.name + ' ' + response.data.last_name,
+            author_image: response.data.image
+          });
+        }
       })
       .catch((e) => {
         console.log(e);
@@ -184,6 +180,11 @@ class OnePost extends Component {
       );
     }
 
+    let count_comments = 0;
+    if (this.state.currentPost.post_id) {
+      count_comments = <CommentCount post={this.state.currentPost.post_id} />;
+    }
+
     return (
       <Fragment>
         <Card
@@ -212,7 +213,7 @@ class OnePost extends Component {
             <CardMedia
               className={classes.media}
               image={this.state.currentPost.image}
-              title="Paella dish"
+              title="Image post"
               component="img"
             />
           )}
@@ -227,7 +228,7 @@ class OnePost extends Component {
 
             <Badge
               color="secondary"
-              badgeContent={this.state.count_comments}
+              badgeContent={count_comments}
               className={clsx(classes.expand, {
                 [classes.expandOpen]: this.state.expanded
               })}
@@ -254,7 +255,10 @@ class OnePost extends Component {
             unmountOnExit
           >
             <CardContent>
-              <CommentList post={this.state.currentPost.post_id} />
+              <CommentList
+                key={this.state.currentPost.post_id}
+                post={this.state.currentPost.post_id}
+              />
             </CardContent>
           </Collapse>
         </Card>

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { createComment } from '../../actions/post';
+import { createComment } from '../../actions/comment';
 
 import { Button, Snackbar, TextField } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';

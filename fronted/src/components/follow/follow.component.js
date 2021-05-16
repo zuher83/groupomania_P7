@@ -2,12 +2,10 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getFollowed, followUnfollow } from './../../actions/follow';
 
-import { IconButton, Button } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import { withStyles } from '@material-ui/styles';
-import { Typography } from '@material-ui/core';
 
 const styles = () => ({
   like: {
@@ -25,13 +23,13 @@ class FollowUnfollow extends Component {
 
     this.state = {
       user_id: '',
-      userFallow: '',
+      userFallow: 0,
       expanded: false
     };
   }
 
   componentDidMount() {
-    if (this.props.postId) {
+    if (this.props.userId) {
       this.getFollow(this.props.userId);
     }
   }
@@ -71,23 +69,25 @@ class FollowUnfollow extends Component {
       <Fragment>
         {this.state.userFallow === 1 ? (
           <div className={classes.followButton}>
-            <IconButton
-              aria-label="add to favorites"
-              onClick={this.followUnfollow}
-            >
-              <DeleteForeverIcon />
-            </IconButton>
-            <Typography variant="overline">Ne plus Suivre</Typography>
+            <Tooltip title="Arrêter de suivre">
+              <IconButton
+                aria-label="del to favorites"
+                onClick={this.followUnfollow}
+              >
+                <RemoveCircleIcon color="error" />
+              </IconButton>
+            </Tooltip>
           </div>
         ) : (
           <div className={classes.followButton}>
-            <IconButton
-              aria-label="del to favorites"
-              onClick={this.followUnfollow}
-            >
-              <PersonAddIcon />
-            </IconButton>
-            <Typography variant="overline">Suivre</Typography>
+            <Tooltip title="Commencer à suivre">
+              <IconButton
+                aria-label="del to favorites"
+                onClick={this.followUnfollow}
+              >
+                <PersonAddIcon color="primary" />
+              </IconButton>
+            </Tooltip>
           </div>
         )}
       </Fragment>

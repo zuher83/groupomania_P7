@@ -5,6 +5,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   UPDATE_USER,
+  DELETE_USER,
   SET_MESSAGE,
   GET_CURRENT_USER,
   GET_USER,
@@ -85,6 +86,14 @@ export const logout = () => (dispatch) => {
 
   dispatch({
     type: LOGOUT
+  });
+};
+
+export const deleteUser = (userId) => (dispatch) => {
+  UserService.deleteUser(userId);
+
+  dispatch({
+    type: DELETE_USER
   });
 };
 

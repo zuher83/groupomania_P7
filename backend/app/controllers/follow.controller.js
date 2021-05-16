@@ -6,24 +6,30 @@ const Follow = db.follow_user;
 const User = db.users;
 
 exports.FollowUnfollowAllGet = async (req, res, next) => {
-  let userId;
-
-  if (req) {
-    const token = req.headers['x-access-token'];
-    const decoded = await jwt.verify(token, config.secret);
-    userId = await User.findByPk(decoded.id);
-  } else {
-    userId = null;
-  }
+  let userId = req.params.id;
 
   try {
-    const followUnfollow = await Follow.findAll({
-      where: { follower_id: userId },
-      raw: true
+    const followUnfollow = await User.findAll({
+      include: [
+        {
+          model: Follow,
+          as: 'follow_users',
+          where: { follower_id: userId }
+        }
+      ],
+      raw: true,
     });
 
     Promise.all(followUnfollow).then((values) => {
-      return res.status(200).json(values);
+      values.map((value) => {
+        if (value.image) {
+          value.image = process.env.BACKEND_URL + '/images/' + value.image;
+        }
+        if (value.image_cover) {
+          value.image_cover = process.env.BACKEND_URL + '/images/' + value.image_cover;
+        }
+      })
+      res.status(200).json(values);
     });
   } catch (err) {
     next(err);
@@ -44,7 +50,7 @@ exports.FollowUnfollowGet = async (req, res, next) => {
 
   try {
     const followUnfollow = await Follow.findAll({
-      where: { user_id: userId, follower_id: followed },
+      where: { user_id: userId, follower_id: followed.user_id },
       raw: true
     });
 
@@ -57,14 +63,16 @@ exports.FollowUnfollowGet = async (req, res, next) => {
           result['userFallow'] = 0;
         }
       });
-      return res.status(200).json(result);
+      res.status(200).json(result);
     });
   } catch (err) {
     next(err);
   }
 };
 
+
 exports.followUnfollowPost = async (req, res, next) => {
+  console.log(req.body);
   const userId = req.body.user;
   let follower_id;
 
@@ -77,18 +85,18 @@ exports.followUnfollowPost = async (req, res, next) => {
   }
 
   try {
-    const followerCheck = await Like.findAll({
-      where: { folllower_id: follower_id, user_id: userId },
+    const followerCheck = await Follow.findAll({
+      where: { follower_id: follower_id.user_id, user_id: userId },
       raw: true
     });
 
     Promise.all(followerCheck).then((values) => {
-      Like.create({
+      Follow.create({
         follower_id: follower_id.user_id,
-        user_id: userId,
+        user_id: userId
       });
-      let result = 1;
-      return res.status(200).json(result);
+      const result = 1;
+      res.status(200).json(result);
     });
   } catch (err) {
     next(err);
@@ -108,22 +116,11 @@ exports.followUnfollowDelete = async (req, res, next) => {
   }
 
   try {
-    const followerCheck = await Like.findAll({
-      where: { user_id: userId, follower_id: follower_id },
-      raw: true
+    Follow.destroy({
+      where: { user_id: userId, follower_id: follower_id.user_id }
     });
-
-    Promise.all(followerCheck).then((values) => {
-      values.map((usr) => {
-        if (usr.like_by === userId.user_id) {
-          Like.destroy({
-            where: { like_id: usr.like_id, like_by: userId.user_id }
-          });
-        }
-      });
-      const result = 0;
-      return res.status(200).json(result);
-    });
+    const result = 0;
+    res.status(200).json(result);
   } catch (err) {
     next(err);
   }

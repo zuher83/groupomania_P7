@@ -1,20 +1,23 @@
-import { RETRIEVE_COMMENTS, CREATE_COMMENT } from '../actions/types';
+import {
+  RETRIEVE_COMMENTS,
+  CREATE_COMMENT,
+  COUNT_COMMENTS
+} from '../actions/types';
 
 const initialState = [];
 
-function commentReducer(content = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
     case CREATE_COMMENT:
-      return [...content, payload];
+      return [...state, payload];
 
     case RETRIEVE_COMMENTS:
+    case COUNT_COMMENTS:
       return payload;
 
     default:
-      return content;
+      return state;
   }
 }
-
-export default commentReducer;

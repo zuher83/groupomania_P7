@@ -24,6 +24,7 @@ export const DELETE_POST = 'DELETE_POST';
 // Comment action types
 export const CREATE_COMMENT = 'CREATE_COMMENT';
 export const RETRIEVE_COMMENTS = 'RETRIEVE_COMMENTS';
+export const COUNT_COMMENTS = 'COUNT_COMMENTS';
 
 // Like or dislike
 export const LIKEDISLIKE = 'LIKEDISLIKE';
@@ -31,4 +32,5 @@ export const UPDATE_LIKE_UNLIKE = 'UPDATE_LIKE_UNLIKE';
 
 // FOLLOW
 export const FOLLOWED = 'FOLLOWED';
+export const FOLLOWED_USER = 'FOLLOWED_USER';
 export const FOLLOW_UNFOLLOW = 'FOLLOW_UNFOLLOW';

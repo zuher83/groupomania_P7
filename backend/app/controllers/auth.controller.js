@@ -2,7 +2,7 @@ const db_index = require('../models/connection-Db');
 const db = require('../models/index');
 const config = require('../config/auth.config');
 const User = db.users;
-const Role = db.roles;
+const Role = db.user_roles;
 
 const Op = db_index.Sequelize.Op;
 
@@ -11,7 +11,6 @@ var bcrypt = require('bcryptjs');
 
 exports.signup = (req, res) => {
   // Creation de l'utilisateur dans la BD
-  console.log(Date.now());
   User.create({
     name: req.body.name,
     last_name: req.body.last_name,
@@ -30,7 +29,7 @@ exports.signup = (req, res) => {
           }
         }).then((roles) => {
           user.setRoles(roles).then(() => {
-            res.send({
+            res.json({
               message:
                 'Félicitation votre compte a bien été crée! Vous allez être redirigé vers la page de connexion'
             });
@@ -39,7 +38,7 @@ exports.signup = (req, res) => {
       } else {
         // user role = 1
         user.setRoles([1]).then(() => {
-          res.send({
+          res.json({
             message:
               'Félicitation votre compte a bien été crée! Vous allez être redirigé vers la page de connexion'
           });
@@ -47,7 +46,7 @@ exports.signup = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(500).json({ message: err.message });
     });
 };
 
@@ -59,7 +58,7 @@ exports.signin = (req, res) => {
   })
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'Utilisateur non trouvé.' });
+        res.status(404).json({ message: 'Utilisateur non trouvé.' });
       }
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
@@ -67,14 +66,14 @@ exports.signin = (req, res) => {
       );
 
       if (!passwordIsValid) {
-        return res.status(401).send({
+        res.status(401).json({
           accessToken: null,
           message: 'Mot de passe invalide!'
         });
       }
 
       var token = jwt.sign({ id: user.user_id }, config.secret, {
-        expiresIn: 86400 // 24 hours
+        expiresIn: 86400 // 24 heures
       });
 
       var authorities = [];
@@ -82,7 +81,7 @@ exports.signin = (req, res) => {
         for (let i = 0; i < roles.length; i++) {
           authorities.push('ROLE_' + roles[i].name.toUpperCase());
         }
-        res.status(200).send({
+        res.status(200).json({
           user_id: user.user_id,
           roles: authorities,
           accessToken: token
@@ -90,6 +89,6 @@ exports.signin = (req, res) => {
       });
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(500).json({ message: err.message });
     });
 };

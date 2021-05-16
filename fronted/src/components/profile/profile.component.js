@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
-// import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import UserService from './../../services/user.service';
-import { editProfile } from '../../actions/auth';
+import { editProfile, deleteUser } from '../../actions/auth';
 import MyPosts from './../posts/post-my.component';
+import Followed from './../follow/followed.component';
 
 import {
   Avatar,
@@ -26,6 +26,7 @@ import {
   Snackbar
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -61,7 +62,8 @@ const styles = () => ({
   },
   media: {
     height: 0,
-    paddingTop: '40.25%'
+    paddingTop: '40.25%',
+    position: 'relative'
   },
   imagePreview: {
     objectFit: 'cover',
@@ -79,6 +81,12 @@ const styles = () => ({
   },
   username: {
     marginLeft: 15
+  },
+  deleteProfile: {
+    position: 'absolute',
+    bottom: 5,
+    left: 10,
+    backgroundColor: '#fff'
   }
 });
 function Alert(props) {
@@ -104,6 +112,7 @@ class Profile extends Component {
     this.handleImageSubmit = this.handleImageSubmit.bind(this);
     this.selectFileCover = this.selectFileCover.bind(this);
     this.selectFile = this.selectFile.bind(this);
+    this.deleteUserProfile = this.deleteUserProfile.bind(this);
 
     this.state = {
       currentUser: {
@@ -133,6 +142,28 @@ class Profile extends Component {
   }
 
   /**
+   * Appel getUserDatas pour charger les données du profile
+   *
+   * @memberof Profile
+   */
+  componentDidMount() {
+    this.getUserDatas(this.props.match.params.id);
+    console.log(this.props);
+  }
+
+  /**
+   * Appel getUserDatas pour mettre à jour les données du profile
+   * en cas de changement du props id dans l'url
+   *
+   * @memberof Profile
+   */
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.id !== this.props.match.params.id) {
+      this.getUserDatas(this.props.match.params.id);
+    }
+  }
+
+  /**
    * Charge les données du profile
    *
    * @param {*} userId
@@ -157,13 +188,23 @@ class Profile extends Component {
       });
   }
 
-  /**
-   * Appel getUserDatas pour charger les données du profile
-   *
-   * @memberof Profile
-   */
-  componentDidMount() {
-    this.getUserDatas(this.props.match.params.id);
+  deleteUserProfile() {
+    const userId = this.props.match.params.id;
+    UserService.deleteUser(userId)
+      .then(() => {
+        this.setState({
+          messageOpen: true,
+          message: 'Profil supprimé!'
+        });
+
+        if (this.props.user.user_id === this.props.match.params.id) {
+          localStorage.removeItem('user');
+          location.reload();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   /**
@@ -321,81 +362,90 @@ class Profile extends Component {
   render() {
     const { classes } = this.props;
     const { currentUser } = this.state;
-    // if (!this.state) {
-    //   return <Redirect to="/login" />;
-    // }
-
+    console.log(this.props);
     return (
       <Fragment>
         <CssBaseline />
         <Container maxWidth="lg" className={classes.root}>
-          <Grid item xs={8}>
-            <Card>
-              <CardMedia
-                className={classes.media}
-                image="https://images.unsplash.com/photo-1547380109-a2fffd5b9036?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1524&q=80"
-                title="Paella dish"
-              />
-              <CardContent className={classes.cardContent}>
-                <div className={classes.avatarWrapper}>
-                  <Avatar
-                    aria-label="recipe"
-                    className={classes.avatar}
-                    // src="https://images.unsplash.com/photo-1581382575275-97901c2635b7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
-                    src={currentUser.image}
-                  />
+          <Grid container spacing={3}>
+            <Grid item xs={8}>
+              <Card>
+                <CardMedia
+                  className={classes.media}
+                  image="https://images.unsplash.com/photo-1547380109-a2fffd5b9036?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1524&q=80"
+                  title="Paella dish"
+                >
                   <IconButton
+                    aria-label="delete"
+                    onClick={this.deleteUserProfile}
+                    className={classes.deleteProfile}
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </CardMedia>
+                <CardContent className={classes.cardContent}>
+                  <div className={classes.avatarWrapper}>
+                    <Avatar
+                      aria-label="recipe"
+                      className={classes.avatar}
+                      // src="https://images.unsplash.com/photo-1581382575275-97901c2635b7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+                      src={currentUser.image}
+                    />
+                    <IconButton
+                      aria-label="edit"
+                      onClick={this.handleClickOpenImage}
+                      className={classes.avatarEdit}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </div>
+                  <Typography variant="h4" component="h3">
+                    {currentUser.name} {currentUser.last_name}
+                  </Typography>
+                  {currentUser.joined && (
+                    <Typography variant="body2" component="p">
+                      Inscrit{' '}
+                      <ReactTimeAgo
+                        date={new Date(currentUser.joined)}
+                        locale="fr-FR"
+                      />
+                    </Typography>
+                  )}
+
+                  {currentUser.birth_date && (
+                    <Typography variant="body2" color="textSecondary">
+                      Age:{' '}
+                      <ReactTimeAgo
+                        date={new Date(currentUser.birth_date)}
+                        locale="fr-FR"
+                        verboseDate="date"
+                        timeStyle="mini"
+                      />
+                    </Typography>
+                  )}
+                  <Typography variant="body2" color="textSecondary">
+                    Travail au Departement : {currentUser.work_department}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Bio : {currentUser.bio}
+                  </Typography>
+                  <Fab
+                    color="secondary"
+                    size="small"
                     aria-label="edit"
-                    onClick={this.handleClickOpenImage}
-                    className={classes.avatarEdit}
+                    className={classes.editForm}
+                    onClick={this.handleClickOpen}
                   >
                     <EditIcon />
-                  </IconButton>
-                </div>
-                <Typography variant="h4" component="h3">
-                  {currentUser.name} {currentUser.last_name}
-                </Typography>
-                {currentUser.joined && (
-                  <Typography variant="body2" component="p">
-                    Inscrit{' '}
-                    <ReactTimeAgo
-                      date={new Date(currentUser.joined)}
-                      locale="fr-FR"
-                    />
-                  </Typography>
-                )}
-
-                {currentUser.birth_date && (
-                  <Typography variant="body2" color="textSecondary">
-                    Age:{' '}
-                    <ReactTimeAgo
-                      date={new Date(currentUser.birth_date)}
-                      locale="fr-FR"
-                      verboseDate="date"
-                      timeStyle="mini"
-                    />
-                  </Typography>
-                )}
-                <Typography variant="body2" color="textSecondary">
-                  Travail au Departement : {currentUser.work_department}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Bio : {currentUser.bio}
-                </Typography>
-                <Fab
-                  color="secondary"
-                  size="small"
-                  aria-label="edit"
-                  className={classes.editForm}
-                  onClick={this.handleClickOpen}
-                >
-                  <EditIcon />
-                </Fab>
-              </CardContent>
-            </Card>
-            <MyPosts />
+                  </Fab>
+                </CardContent>
+              </Card>
+              <MyPosts />
+            </Grid>
+            <Grid item xs={4}>
+              {currentUser.user_id && <Followed userId={currentUser.user_id} />}
+            </Grid>
           </Grid>
-          <Grid item xs={4}></Grid>
         </Container>
 
         <Dialog
@@ -529,6 +579,7 @@ class Profile extends Component {
                         margin="normal"
                         id="date-picker-inline"
                         label="Date Naissance"
+                        value={this.state.birth_date}
                         onChange={this.handleChange}
                       />
                     </MuiPickersUtilsProvider>
@@ -599,6 +650,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { editProfile })(
+export default connect(mapStateToProps, { editProfile, deleteUser })(
   withStyles(styles)(Profile)
 );

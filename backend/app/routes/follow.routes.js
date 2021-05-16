@@ -11,7 +11,7 @@ module.exports = function (app) {
   });
 
   // Follow routes
-  app.get('/api/follow', [authJwt.verifyToken], controller.FollowUnfollowAllGet);
+  app.get('/api/followed/:id', [authJwt.verifyToken], controller.FollowUnfollowAllGet);
   app.get('/api/follow/:id', [authJwt.verifyToken], controller.FollowUnfollowGet);
   app.post('/api/follow', [authJwt.verifyToken], controller.followUnfollowPost);
   app.delete('/api/follow/:id', [authJwt.verifyToken], controller.followUnfollowDelete);

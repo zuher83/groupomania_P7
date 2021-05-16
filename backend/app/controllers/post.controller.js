@@ -1,11 +1,12 @@
 const config = require('../config/auth.config');
 var jwt = require('jsonwebtoken');
-
 const db = require('../models/index');
 const Post = db.posts;
 const Like = db.likes;
 const User = db.users;
 const Comment = db.comments;
+
+// require('dotenv').config();
 
 exports.createPost = async (req, res, next) => {
   let userId;
@@ -21,9 +22,7 @@ exports.createPost = async (req, res, next) => {
 
   if (req.file) {
     if (req.file.fieldname === 'image') {
-      image = `${req.protocol}://${req.get('host')}/images/${
-        req.file.filename
-      }`;
+      image = req.file.filename;
     }
   }
 
@@ -35,9 +34,9 @@ exports.createPost = async (req, res, next) => {
       post_created: new Date().getTime(),
       image: image
     });
-    return res.status(200).json(response);
+    res.status(200).json(response);
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err });
   }
 };
 
@@ -49,32 +48,30 @@ exports.allPosts = async (req, res, next) => {
     });
 
     Promise.all(allPostsDb).then((values) => {
-      let result = values;
-
-      return res.status(200).json(result);
+      res.status(200).json(values);
     });
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err });
   }
 };
 
 exports.onePost = async (req, res, next) => {
-  // console.log(req.params.id);
   try {
     const PostsDb = await Post.findByPk(req.params.id, { raw: true });
-    return res.status(200).json(PostsDb);
-    // Promise.all(PostsDb).then((values) => {
-    //   let result = values;
-    //   return res.status(200).json(result);
-    // });
+    if (PostsDb.image) {
+      const imageUrl = process.env.BACKEND_URL + '/images/' + PostsDb.image;
+      PostsDb.image = imageUrl;
+    }
+    res.status(200).json(PostsDb);
   } catch (err) {
-    next(err);
+    console.log(err);
+
+    res.status(500).json({ message: err });
   }
 };
 
 exports.myPosts = async (req, res, next) => {
   let userId;
-  console.log('Test', req.body);
   if (req) {
     const token = req.headers['x-access-token'];
     const decoded = await jwt.verify(token, config.secret);
@@ -93,10 +90,10 @@ exports.myPosts = async (req, res, next) => {
     Promise.all(allPostsDb).then((values) => {
       let result = values;
 
-      return res.status(200).json(result);
+      res.status(200).json(result);
     });
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err });
   }
 };
 
@@ -105,10 +102,14 @@ exports.updatePost = async (req, res, next) => {
 };
 
 exports.deletePost = async (req, res, next) => {
-  console.log(req);
-  Like.destroy({
-    where: { postId: req.params.id }
-  });
+  try {
+    await Like.destroy({
+      where: { postId: req.params.id }
+    });
+    res.status(200).json({ message: 'Post supprimé avec succés' });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 };
 
 exports.allComments = async (req, res, next) => {
@@ -121,21 +122,19 @@ exports.allComments = async (req, res, next) => {
 
     Promise.all(commentsGet).then((values) => {
       let result = values;
-      console.log(result);
-      return res.status(200).json(result);
+      res.status(200).json(result);
     });
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err });
   }
 };
 
 exports.oneComment = async (req, res, next) => {
   try {
-    console.log(req.params);
     const Result = await Comment.findByPk(req.params.id, { raw: true });
-    return res.status(200).json(Result);
+    res.status(200).json(Result);
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err });
   }
 };
 exports.createComments = async (req, res, next) => {
@@ -154,11 +153,11 @@ exports.createComments = async (req, res, next) => {
       post_id: req.body.post_id,
       comment: req.body.comment,
       user_id: userId.user_id,
-      create_date: new Date().getTime(),
+      create_date: new Date().getTime()
     });
-    return res.status(200).json(response);
+    res.status(200).json(response);
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err });
   }
 };
 
@@ -182,8 +181,6 @@ exports.getLikes = async (req, res, next) => {
     });
 
     Promise.all(likeDislike).then((values) => {
-      // let result = values;
-      // let result = new ResValue();
       const result = { countVals: 0, userLiked: 0 };
       result['countVals'] = values.length;
       values.map((usr) => {
@@ -193,10 +190,10 @@ exports.getLikes = async (req, res, next) => {
           result['userLiked'] = 0;
         }
       });
-      return res.status(200).json(result);
+      res.status(200).json(result);
     });
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err });
   }
 };
 
@@ -232,7 +229,7 @@ exports.postLike = async (req, res, next) => {
         values.map((usr) => {
           if (usr.like_by === userId.user_id) {
             result['userLiked'] = 1;
-            return res.status(200).json(result);
+            res.status(200).json(result);
           } else {
             Like.create({
               post_id: postId,
@@ -253,10 +250,10 @@ exports.postLike = async (req, res, next) => {
         result['countVals'] = values.length + 1;
       }
 
-      return res.status(200).json(result);
+      res.status(200).json(result);
     });
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err });
   }
 };
 
@@ -290,9 +287,9 @@ exports.postUnLike = async (req, res, next) => {
           result['countVals'] = values.length - 1;
         }
       });
-      return res.status(200).json(result);
+      res.status(200).json(result);
     });
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err });
   }
 };

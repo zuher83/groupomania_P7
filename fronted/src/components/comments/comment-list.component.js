@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { retrieveComments } from '../../actions/post';
+import { retrieveComments } from '../../actions/comment';
 import CommentComponent from './comment.component';
 
 /**
@@ -41,8 +41,6 @@ class CommentsList extends Component {
    * @memberof CommentsList
    */
   render() {
-    console.log(this.props);
-
     const { comment } = this.props;
     return (
       <Fragment>

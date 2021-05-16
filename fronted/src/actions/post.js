@@ -4,8 +4,6 @@ import {
   RETRIEVE_POST,
   UPDATE_POST,
   DELETE_POST,
-  RETRIEVE_COMMENTS,
-  CREATE_COMMENT,
   LIKEDISLIKE,
   UPDATE_LIKE_UNLIKE
 } from './types';
@@ -57,8 +55,8 @@ export const retrieveOnePost = (postId) => async (dispatch) => {
     dispatch({
       type: RETRIEVE_POST,
       payload: res.data
-      // payload: { post: res.data }
     });
+    return Promise.resolve(res.data);
   } catch (err) {
     console.log(err);
   }
@@ -92,36 +90,6 @@ export const deletePost = (postId) => async (dispatch) => {
   }
 };
 
-export const createComment = (data) => async (dispatch) => {
-  console.log(data);
-  try {
-    const res = await ContentService.createComments(data);
-
-    dispatch({
-      type: CREATE_COMMENT,
-      payload: res.data
-    });
-
-    return Promise.resolve(res.data);
-  } catch (err) {
-    return Promise.reject(err);
-  }
-};
-
-export const retrieveComments = (postId) => async (dispatch) => {
-  try {
-    const res = await ContentService.allComments(postId);
-
-    dispatch({
-      type: RETRIEVE_COMMENTS,
-      payload: res.data
-    });
-    return Promise.resolve(res.data);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 export const getLikes = (postId) => async (dispatch) => {
   try {
     const res = await ContentService.getLikes(postId);
@@ -137,7 +105,6 @@ export const getLikes = (postId) => async (dispatch) => {
 };
 
 export const likeUnlike = (postId, state) => async (dispatch) => {
-  console.log(state, postId);
   try {
     let res;
     if (state === 0) {

@@ -4,25 +4,26 @@ const Sequelize = require('sequelize');
 
 const db = require('../models/index');
 const User = db.users;
+const Role = db.user_roles;
 
 exports.allAccess = (req, res) => {
-  res.status(200).send('Contenu Public.');
+  res.status(200).json('Contenu Public.');
 };
 
 exports.homePage = (req, res) => {
-  res.status(200).send('Page Accueil.');
+  res.status(200).json('Page Accueil.');
 };
 
 exports.userBoard = (req, res) => {
-  res.status(200).send('Utilisateur.');
+  res.status(200).json('Utilisateur.');
 };
 
 exports.adminBoard = (req, res) => {
-  res.status(200).send('Admin.');
+  res.status(200).json('Admin.');
 };
 
 exports.moderatorBoard = (req, res) => {
-  res.status(200).send('Moderateur.');
+  res.status(200).json('Moderateur.');
 };
 
 exports.allUsers = async (req, res, next) => {
@@ -42,7 +43,17 @@ exports.allUsers = async (req, res, next) => {
     },
     raw: true
   });
-  return res.status(200).send(allUsers);
+  allUsers.map((userId) => {
+    if (userId.image) {
+      userId.image = process.env.BACKEND_URL + '/images/' + userId.image;
+    }
+    if (userId.image_cover) {
+      userId.image_cover =
+        process.env.BACKEND_URL + '/images/' + userId.image_cover;
+    }
+  });
+  console.log(allUsers);
+  res.status(200).json(allUsers);
 };
 
 exports.myProfile = async (req, res, next) => {
@@ -51,19 +62,37 @@ exports.myProfile = async (req, res, next) => {
     const token = req.headers['x-access-token'];
     const decoded = await jwt.verify(token, config.secret);
     userId = await User.findByPk(decoded.id);
-    return res.status(200).send(userId);
+    if (userId.image) {
+      userId.image = process.env.BACKEND_URL + '/images/' + userId.image;
+    }
+    if (userId.image_cover) {
+      userId.image_cover =
+        process.env.BACKEND_URL + '/images/' + userId.image_cover;
+    }
+    res.status(200).json(userId);
   } else {
-    return res.status(500).send('Utilisateur non trouvé!');
+    res.status(500).json('Utilisateur non trouvé!');
   }
 };
 
 exports.userGet = async (req, res, next) => {
-  const id = req.params.id;
-  if (id) {
-    currentUser = await User.findByPk(req.params.id);
-    return res.status(200).send(currentUser);
-  } else {
-    return res.status(500).send('Utilisateur non trouvé!');
+  try {
+    const id = req.params.id;
+
+    if (id) {
+      currentUser = await User.findByPk(req.params.id);
+      if (currentUser.image) {
+        currentUser.image =
+          process.env.BACKEND_URL + '/images/' + currentUser.image;
+      }
+      if (currentUser.image_cover) {
+        currentUser.image_cover =
+          process.env.BACKEND_URL + '/images/' + currentUser.image_cover;
+      }
+      res.status(200).json(currentUser);
+    }
+  } catch (err) {
+    res.status(500).json('Utilisateur non trouvé!');
   }
 };
 
@@ -73,16 +102,12 @@ exports.userUpdate = (req, res, next) => {
   if (req.file) {
     if (req.file.fieldname === 'image') {
       var datas = {
-        image: `${req.protocol}://${req.get('host')}/images/${
-          req.file.filename
-        }`
+        image: req.file.filename
       };
     }
     if (req.file.fieldname === 'image_cover') {
       var datas = {
-        image_cover: `${req.protocol}://${req.get('host')}/images/${
-          req.file.filename
-        }`
+        image_cover: req.file.filename
       };
     }
   }
@@ -92,19 +117,48 @@ exports.userUpdate = (req, res, next) => {
   })
     .then((user) => {
       if (user == 1) {
-        return res.status(200).send({
+        res.status(200).json({
           message: 'Profil Admin mis à jour.'
         });
       } else {
-        return res.status(200).send({
+        res.status(200).json({
           message: `Votre profile est mis à jour!`
         });
       }
     })
     .catch((err) => {
-      return res.status(500).send({
+      res.status(500).json({
         message: 'Erreur de mise à jour du profile'
       });
     });
+};
 
+exports.userDelete = async (req, res) => {
+  const userId = req.params.id;
+  let currentUser;
+  let currentUserRole;
+
+  if (req) {
+    const token = req.headers['x-access-token'];
+    const decoded = await jwt.verify(token, config.secret);
+    currentUser = await User.findByPk(decoded.id);
+    currentUserRole = await Role.findOne({
+      where: { roleId: 3, userId: currentUser.user_id },
+      raw: true
+    });
+  } else {
+    currentUser = null;
+  }
+
+  if (userId !== currentUser.user_id || currentUserRole.roleId === 3) {
+    console.log(currentUserRole);
+    try {
+      User.destroy({
+        where: { user_id: userId }
+      });
+      res.status(200).json({ message: 'Profile supprimé' });
+    } catch (err) {
+      next(err);
+    }
+  }
 };

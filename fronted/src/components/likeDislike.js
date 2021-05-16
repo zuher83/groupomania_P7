@@ -18,6 +18,8 @@ const styles = () => ({
 });
 
 class LikeUnlike extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.likeUnlike = this.likeUnlike.bind(this);
@@ -32,6 +34,7 @@ class LikeUnlike extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     if (this.props.postId) {
       this.getLikes(this.props.postId);
     }
@@ -41,10 +44,12 @@ class LikeUnlike extends Component {
     this.props
       .getLikes(postId)
       .then((response) => {
-        this.setState({
-          countLikes: response.countVals + ' like(s)',
-          likeUnlike: response.userLiked
-        });
+        if (this._isMounted) {
+          this.setState({
+            countLikes: response.countVals + ' like(s)',
+            likeUnlike: response.userLiked
+          });
+        }
       })
       .catch((e) => {
         console.log(e);
@@ -58,14 +63,20 @@ class LikeUnlike extends Component {
     this.props
       .likeUnlike(postId, state)
       .then((response) => {
-        this.setState({
-          countLikes: response.countVals + ' like(s)',
-          likeUnlike: response.userLiked
-        });
+        if (this._isMounted) {
+          this.setState({
+            countLikes: response.countVals + ' like(s)',
+            likeUnlike: response.userLiked
+          });
+        }
       })
       .catch((e) => {
         console.log(e);
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {

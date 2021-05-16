@@ -14,7 +14,7 @@ import {
 import Skeleton from '@material-ui/lab/Skeleton';
 import 'date-fns';
 import { withStyles } from '@material-ui/styles';
-import Follow from './profile-follow.component';
+import Follow from './../follow/follow.component';
 import { red } from '@material-ui/core/colors';
 
 /**
@@ -26,7 +26,7 @@ const styles = () => ({
     minWidth: '100%',
     marginTop: 20,
     // marginBottom: 10,
-    height: 290,
+    height: 270,
 
     '& .MuiTextField-root': {
       margin: 5
@@ -40,7 +40,8 @@ const styles = () => ({
   },
   content: {
     position: 'relative',
-    display: 'flex'
+    display: 'flex',
+    minHeight: 80
   },
   avatar: {
     top: 10,

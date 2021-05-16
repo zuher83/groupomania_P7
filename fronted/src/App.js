@@ -59,7 +59,6 @@ class App extends Component {
       currentUser: undefined,
       anchorEl: null
     };
-
     history.listen(() => {
       props.dispatch(clearMessage());
     });
@@ -101,7 +100,7 @@ class App extends Component {
               <Route exact path="/" component={PublicHome} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
-              <PrivateRoute exact path="/user/:id" component={Profile} />
+              <PrivateRoute path="/user/:id" component={Profile} />
               <PrivateRoute exact path="/home" component={Home} />
               <PrivateRoute exact path="/user" component={BoardUser} />
               <PrivateRoute exact path="/users" component={ProfileList} />
@@ -115,7 +114,6 @@ class App extends Component {
 
 function mapStateToProps(state) {
   const { user, isLoggedIn } = state.auth;
-
   return {
     user,
     isLoggedIn

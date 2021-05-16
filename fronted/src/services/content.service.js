@@ -49,7 +49,6 @@ class ContentService {
   }
 
   createComments(data) {
-    console.log(data);
     return axios.post(API_URL + 'comments-create', data, {
       headers: authHeader()
     });

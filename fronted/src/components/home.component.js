@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 // import { Redirect } from 'react-router-dom';
 
-import UserService from '../services/user.service';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import CreatePost from '../components/posts/post-create.component';
@@ -24,26 +23,6 @@ export default class Home extends Component {
     this.state = {
       content: ''
     };
-  }
-
-  componentDidMount() {
-    UserService.getHome().then(
-      (response) => {
-        this.setState({
-          content: response.data
-        });
-      },
-      (error) => {
-        this.setState({
-          content:
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString()
-        });
-      }
-    );
   }
 
   render() {

@@ -12,8 +12,10 @@ class UserService {
     return axios.get(API_URL + 'home', { headers: authHeader() });
   }
 
-  getUserBoard() {
-    return axios.get(API_URL + 'user', { headers: authHeader() });
+  deleteUser(userId) {
+    return axios.delete(API_URL + `user/${userId}`, {
+      headers: authHeader()
+    });
   }
 
   updateProfile(userId, data) {
@@ -68,8 +70,8 @@ class UserService {
     });
   }
 
-  FollowUnfollowAllGet() {
-    return axios.get(API_URL + 'follow', {
+  FollowUnfollowAllGet(userId) {
+    return axios.get(API_URL + `followed/${userId}`, {
       headers: authHeader()
     });
   }

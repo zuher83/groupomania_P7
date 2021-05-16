@@ -2,7 +2,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
-import { Container, Grid } from '@material-ui/core';
+import { Container, Grid, CssBaseline } from '@material-ui/core';
 import 'date-fns';
 import { withStyles } from '@material-ui/styles';
 import { getAllProfile } from './../../actions/auth';
@@ -63,6 +63,8 @@ class AllUsersProfiles extends Component {
 
     return (
       <Fragment>
+        <CssBaseline />
+
         <div className="page">
           <Container maxWidth="lg">
             <Grid container spacing={3}>

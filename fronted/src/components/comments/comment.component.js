@@ -37,8 +37,11 @@ const styles = () => ({
 });
 
 class OneComment extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
+
     this.state = {
       currentComment: {
         comment_id: '',
@@ -52,18 +55,19 @@ class OneComment extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this.getComment(this.props.commentId);
   }
 
   getComment(commentId) {
     ContentService.oneComment(commentId)
       .then((response) => {
-        console.log(response);
-
-        this.setState({
-          currentComment: response.data
-        });
-        this.getUser(response.data.user_id);
+        if (this._isMounted) {
+          this.setState({
+            currentComment: response.data
+          });
+          this.getUser(response.data.user_id);
+        }
       })
       .catch((e) => {
         console.log(e);
@@ -73,14 +77,20 @@ class OneComment extends Component {
   getUser(userId) {
     UserService.getProfile(userId)
       .then((response) => {
-        this.setState({
-          author_name: response.data.name + ' ' + response.data.last_name,
-          author_image: response.data.image
-        });
+        if (this._isMounted) {
+          this.setState({
+            author_name: response.data.name + ' ' + response.data.last_name,
+            author_image: response.data.image
+          });
+        }
       })
       .catch((e) => {
         console.log(e);
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
