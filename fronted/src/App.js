@@ -12,7 +12,8 @@ import ProfileList from './components/profile/profile-list.component';
 import BoardUser from './components/board-user.component';
 import MenuNavigation from './components/menu.component';
 
-import { clearMessage } from './actions/message';
+import { clearMessage, setMessage } from './actions/message';
+import Message from './components/message.component';
 
 import { history } from './helpers/history';
 import { PrivateRoute } from './helpers/private';
@@ -57,7 +58,10 @@ class App extends Component {
       showModeratorBoard: false,
       showAdminBoard: false,
       currentUser: undefined,
-      anchorEl: null
+      anchorEl: null,
+      open: false,
+      message: '',
+      severity: 'success'
     };
     history.listen(() => {
       props.dispatch(clearMessage());
@@ -82,6 +86,24 @@ class App extends Component {
   }
 
   /**
+   * Affiche un message si la props message est mis à jour
+   * Quand on appelle setMessage indiquer deux parametres
+   * comme suivant {message: 'Votre message', severity: 'success'}
+   *
+   * @param {*} prevProps
+   * @memberof App
+   */
+  componentDidUpdate(prevProps) {
+    if (prevProps.message !== this.props.message) {
+      this.setState({
+        message: this.props.message.message,
+        open: true,
+        severity: this.props.message.severity
+      });
+    }
+  }
+
+  /**
    * Rendu avec les routes public et privé
    * On vérifie si le user est connecté pour afficher la barre de menu
    *
@@ -90,7 +112,6 @@ class App extends Component {
    */
   render() {
     const { classes, isLoggedIn } = this.props;
-
     return (
       <Router history={history}>
         <div className={classes.root}>
@@ -106,6 +127,12 @@ class App extends Component {
               <PrivateRoute exact path="/users" component={ProfileList} />
             </Switch>
           </div>
+          {this.state.message && (
+            <Message
+              message={this.state.message}
+              severity={this.state.severity}
+            />
+          )}
         </div>
       </Router>
     );
@@ -114,8 +141,10 @@ class App extends Component {
 
 function mapStateToProps(state) {
   const { user, isLoggedIn } = state.auth;
+  const { message } = state.message;
   return {
     user,
+    message,
     isLoggedIn
   };
 }

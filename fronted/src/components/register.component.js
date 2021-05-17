@@ -14,7 +14,7 @@ import {
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import { register } from '../actions/auth';
-import MessageComp from './message.component';
+import { setMessage } from '../actions/message';
 
 const styles = () => ({
   root: {
@@ -180,7 +180,9 @@ class Register extends Component {
       )
       .then(() => {
         this.setState({
-          successful: true,
+          successful: true
+        });
+        this.props.setMessage({
           message:
             'Compte créé avec succés, vous allez être redirigé pour vous connecter',
           severity: 'success'
@@ -192,7 +194,9 @@ class Register extends Component {
       })
       .catch(() => {
         this.setState({
-          successful: false,
+          successful: false
+        });
+        this.props.setMessage({
           message: 'Votre compte ne peut être créé!',
           severity: 'danger'
         });
@@ -336,10 +340,6 @@ class Register extends Component {
             </Grid>
           </Container>
         </Box>
-        <MessageComp
-          message={this.state.message}
-          severity={this.state.severity}
-        />
       </Fragment>
     );
   }
@@ -352,4 +352,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(Register));
+export default connect(mapStateToProps, { setMessage })(
+  withStyles(styles)(Register)
+);

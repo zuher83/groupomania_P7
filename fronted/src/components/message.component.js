@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Snackbar from '@material-ui/core/Snackbar';
@@ -33,9 +34,13 @@ class DisplayMessage extends Component {
     if (prevProps.message !== this.props.message) {
       this.setState({
         message: this.props.message,
-        open: true,
-        severity: this.props.severity
+        open: true
       });
+      if (this.props.severity) {
+        this.setState({
+          severity: this.props.severity
+        });
+      }
     }
   }
 
@@ -64,5 +69,9 @@ class DisplayMessage extends Component {
     );
   }
 }
+
+DisplayMessage.propTypes = {
+  message: PropTypes.string.isRequired
+};
 
 export default connect(null, {})(withStyles(styles)(DisplayMessage));
