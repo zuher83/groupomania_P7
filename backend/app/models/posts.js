@@ -9,7 +9,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     author: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'user_id'
+      }
     },
     title: {
       type: DataTypes.STRING(255),
@@ -45,6 +49,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "post_id" },
+        ]
+      },
+      {
+        name: "author_relation",
+        using: "BTREE",
+        fields: [
+          { name: "author" },
         ]
       },
     ]

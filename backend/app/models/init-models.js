@@ -32,6 +32,8 @@ function initModels(sequelize) {
   users.hasMany(follow_user, { as: "follower_follow_users", foreignKey: "follower_id"});
   likes.belongsTo(users, { as: "like_by_user", foreignKey: "like_by"});
   users.hasMany(likes, { as: "likes", foreignKey: "like_by"});
+  posts.belongsTo(users, { as: "author_user", foreignKey: "author"});
+  users.hasMany(posts, { as: "posts", foreignKey: "author"});
   user_roles.belongsTo(users, { as: "user", foreignKey: "userId"});
   users.hasMany(user_roles, { as: "user_roles", foreignKey: "userId"});
 
