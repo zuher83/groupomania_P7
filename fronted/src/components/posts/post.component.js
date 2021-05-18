@@ -6,6 +6,7 @@ import LikeUnlike from './../likeDislike';
 import CommentForm from './../comments/comment-form.component';
 import CommentList from './../comments/comment-list.component';
 import CommentCount from './../comments/comment-count.component';
+import PostDeleteComponent from './post-delete.component';
 
 // import { Link } from 'react-router-dom';
 import clsx from 'clsx';
@@ -22,9 +23,7 @@ import {
   Collapse,
   Typography
 } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { red } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/styles';
 
@@ -58,6 +57,7 @@ class OnePost extends Component {
   constructor(props) {
     super(props);
     this.handleExpandClick = this.handleExpandClick.bind(this);
+    this.deleteCurrentPost = this.deleteCurrentPost.bind(this);
 
     this.state = {
       currentPost: {
@@ -84,7 +84,7 @@ class OnePost extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-    this.getPost(this.props.postId);
+    this.getPost(this.props.post_id);
     const user = JSON.parse(localStorage.getItem('user'));
     this.setState({
       currentUserRole: user.roles[0]
@@ -118,7 +118,7 @@ class OnePost extends Component {
   }
 
   /**
-   * Ov chercher les données de l'auteur
+   * Va chercher les données de l'auteur
    *
    * @param {*} userId
    * @memberof OnePost
@@ -135,6 +135,19 @@ class OnePost extends Component {
       })
       .catch((e) => {
         console.log(e);
+      });
+  }
+
+  deleteCurrentPost() {
+    const currentPost = this.state.currentPost.post_id;
+
+    this.props
+      .deletePost(currentPost)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }
 
@@ -174,9 +187,7 @@ class OnePost extends Component {
 
     if (this.state.currentUserRole === 'ROLE_ADMIN') {
       deleteButton = (
-        <IconButton aria-label="settings">
-          <DeleteForeverIcon />
-        </IconButton>
+        <PostDeleteComponent post_id={this.state.currentPost.post_id} />
       );
     }
 
@@ -255,10 +266,7 @@ class OnePost extends Component {
             unmountOnExit
           >
             <CardContent>
-              <CommentList
-                key={this.state.currentPost.post_id}
-                post={this.state.currentPost.post_id}
-              />
+              <CommentList post={this.state.currentPost.post_id} />
             </CardContent>
           </Collapse>
         </Card>

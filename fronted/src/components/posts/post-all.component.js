@@ -15,7 +15,20 @@ class PostsList extends Component {
     };
   }
   componentDidMount() {
-    this.props.retrieveAllPosts();
+    this.props
+      .retrieveAllPosts()
+      .then((res) => {
+        this.setState({ posts: res });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.posts !== this.props.posts) {
+      this.setState({ posts: this.props.posts });
+    }
   }
 
   render() {
@@ -28,7 +41,7 @@ class PostsList extends Component {
             posts
               .reverse()
               .map((res) => (
-                <PostComponent key={res.post_id} postId={res.post_id} />
+                <PostComponent key={res.post_id} post_id={res.post_id} />
               ))}
         </div>
       </Fragment>

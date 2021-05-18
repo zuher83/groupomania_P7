@@ -34,6 +34,8 @@ app.get('/', (req, res) => {
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
 require('./app/routes/post.routes')(app);
+require('./app/routes/comment.routes')(app);
+require('./app/routes/like.routes')(app);
 require('./app/routes/follow.routes')(app);
 
 app.use(express.static(path.join(__dirname, '/public')));

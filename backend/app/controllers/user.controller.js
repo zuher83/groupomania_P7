@@ -1,5 +1,7 @@
 const config = require('../config/auth.config');
 var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
+
 const Sequelize = require('sequelize');
 
 const db = require('../models/index');
@@ -99,6 +101,8 @@ exports.userGet = async (req, res, next) => {
 exports.userUpdate = (req, res, next) => {
   const id = req.params.id;
   var datas = req.body;
+
+  // Si change d'avatar ou d'image de couverture
   if (req.file) {
     if (req.file.fieldname === 'image') {
       var datas = {
@@ -110,6 +114,12 @@ exports.userUpdate = (req, res, next) => {
         image_cover: req.file.filename
       };
     }
+  }
+
+  // Si l'utilisateur change de mot de passe on le crypte
+  if (datas.password) {
+    const newPassword = bcrypt.hashSync(datas.password, 8);
+    datas = { password: newPassword };
   }
 
   User.update(datas, {
@@ -151,7 +161,6 @@ exports.userDelete = async (req, res) => {
   }
 
   if (userId !== currentUser.user_id || currentUserRole.roleId === 3) {
-    console.log(currentUserRole);
     try {
       User.destroy({
         where: { user_id: userId }

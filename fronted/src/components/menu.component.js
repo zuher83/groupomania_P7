@@ -7,6 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Avatar from '@material-ui/core/Avatar';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -139,7 +140,12 @@ class AppMenu extends Component {
             onClick={this.handleMenu}
             color="inherit"
           >
-            <AccountCircle />
+            {/* <AccountCircle /> */}
+            {currentUser.image ? (
+              <Avatar aria-label="recipe" src={currentUser.image} />
+            ) : (
+              <AccountCircle />
+            )}
           </IconButton>
           <Menu
             id="menu-appbar"

@@ -1,25 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { createPost } from '../../actions/post';
+import { setMessage } from '../../actions/message';
 
 // import CardActions from '@material-ui/core/CardActions';
-import {
-  Button,
-  Card,
-  CardContent,
-  TextField,
-  Input,
-  Snackbar
-} from '@material-ui/core';
+import { Button, Card, CardContent, TextField, Input } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
-import MuiAlert from '@material-ui/lab/Alert';
 
 import { withStyles } from '@material-ui/styles';
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const styles = () => ({
   root: {
@@ -128,13 +117,19 @@ class AddNewPost extends Component {
       .then(() => {
         this.handleReset();
         this.setState({
-          ...this.state,
-          open: true,
-          message: 'Félicitation votre message est publié!'
+          ...this.state
+        });
+        this.props.setMessage({
+          message: 'Félicitation votre message est publié!',
+          severity: 'success'
         });
       })
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
+        this.props.setMessage({
+          message:
+            'Un probléme est survenu lors de la publication de votre message!',
+          severity: 'error'
+        });
       });
   }
 
@@ -153,9 +148,6 @@ class AddNewPost extends Component {
 
   render() {
     const { classes } = this.props;
-    const handleClose = () => {
-      this.setState({ ...this.state, open: false });
-    };
 
     return (
       <Fragment>
@@ -222,19 +214,11 @@ class AddNewPost extends Component {
             </form>
           </CardContent>
         </Card>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={this.state.open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="success">
-            {this.state.message}
-          </Alert>
-        </Snackbar>
       </Fragment>
     );
   }
 }
 
-export default connect(null, { createPost })(withStyles(styles)(AddNewPost));
+export default connect(null, { createPost, setMessage })(
+  withStyles(styles)(AddNewPost)
+);

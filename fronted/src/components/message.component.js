@@ -53,7 +53,6 @@ class DisplayMessage extends Component {
     return (
       <Fragment>
         <div className={classes.root} key={this.props.message}>
-          <span>{this.state.message}</span>
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             open={this.state.open}

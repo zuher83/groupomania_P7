@@ -16,7 +16,7 @@ class CommentsCount extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { comments: {} };
+    this.state = {};
   }
 
   /**
@@ -27,18 +27,39 @@ class CommentsCount extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-    if (this.props.post) {
-      this.props
-        .retrieveComments(this.props.post)
-        .then((result) => {
-          if (this._isMounted) {
-            this.setState({ comments: result });
+    this.props
+      .retrieveComments(this.props.post)
+      .then((result) => {
+        if (this._isMounted) {
+          if (result.length > 0) {
+            this.setState( {comment: result} );
           }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // console.log(this.props);
+    console.log(prevState);
+    if (prevState.comment !== this.props.comment_count) {
+      // let actual = this.state.comment;
+      // actual.push(this.props.comment);
+      console.log(this.props.comment_count);
+
+      // this.setState({comment_count: this.props.comment_count});
     }
+
+    // if (prevProps.comment !== this.props.comment) {
+    //   if (this.props.post === prevProps.post) {
+    //     console.log(this.props);
+    //     this.setState({
+    //       comment: this.props.comment
+    //     });
+    //   }
+    // }
   }
 
   componentWillUnmount() {
@@ -52,9 +73,13 @@ class CommentsCount extends Component {
    * @memberof CommentsCount
    */
   render() {
-    return (
-      <Fragment key={this.props.post}>{this.state.comments.length}</Fragment>
-    );
+    const { comment } = this.props;
+
+    console.log(comment);
+    if (comment) {
+      return <Fragment>{comment.length}</Fragment>;
+    }
+    return '0';
   }
 }
 
@@ -66,6 +91,7 @@ class CommentsCount extends Component {
 // }
 const mapStateToProps = (state) => ({
   comment: state.comment
+  // comment: state.comment
 });
 
 CommentsCount.propTypes = {

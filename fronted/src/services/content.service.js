@@ -14,8 +14,8 @@ class ContentService {
     });
   }
 
-  myPosts() {
-    return axios.get(API_URL + 'posts-my', { headers: authHeader() });
+  myPosts(userId) {
+    return axios.get(API_URL + `posts-my/${userId}`, { headers: authHeader() });
   }
 
   createPosts(data) {
@@ -38,6 +38,12 @@ class ContentService {
 
   allComments(postId) {
     return axios.get(API_URL + `comments-all/${postId}`, {
+      headers: authHeader()
+    });
+  }
+
+  countComments(postId) {
+    return axios.get(API_URL + `comments-count/${postId}`, {
       headers: authHeader()
     });
   }

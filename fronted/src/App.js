@@ -97,7 +97,6 @@ class App extends Component {
     if (prevProps.message !== this.props.message) {
       this.setState({
         message: this.props.message.message,
-        open: true,
         severity: this.props.message.severity
       });
     }

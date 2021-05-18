@@ -71,11 +71,11 @@ exports.onePost = async (req, res, next) => {
 };
 
 exports.myPosts = async (req, res, next) => {
-  let userId;
+  let user_id = req.params.id;
   if (req) {
-    const token = req.headers['x-access-token'];
-    const decoded = await jwt.verify(token, config.secret);
-    userId = await User.findByPk(decoded.id);
+    // const token = req.headers['x-access-token'];
+    // const decoded = await jwt.verify(token, config.secret);
+    userId = await User.findByPk(user_id);
   } else {
     userId = null;
   }
@@ -103,192 +103,12 @@ exports.updatePost = async (req, res, next) => {
 
 exports.deletePost = async (req, res, next) => {
   try {
-    await Like.destroy({
-      where: { postId: req.params.id }
+    const result = await Post.destroy({
+      where: { post_id: req.params.id }
     });
-    res.status(200).json({ message: 'Post supprimé avec succés' });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-};
+    console.log(result);
 
-exports.allComments = async (req, res, next) => {
-  try {
-    const commentsGet = await Comment.findAll({
-      where: { post_id: req.params.id },
-      attributes: ['comment_id'],
-      raw: true
-    });
-
-    Promise.all(commentsGet).then((values) => {
-      let result = values;
-      res.status(200).json(result);
-    });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-};
-
-exports.oneComment = async (req, res, next) => {
-  try {
-    const Result = await Comment.findByPk(req.params.id, { raw: true });
-    res.status(200).json(Result);
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-};
-exports.createComments = async (req, res, next) => {
-  let userId;
-
-  if (req) {
-    const token = req.headers['x-access-token'];
-    const decoded = await jwt.verify(token, config.secret);
-    userId = await User.findByPk(decoded.id);
-  } else {
-    userId = null;
-  }
-
-  try {
-    const response = await Comment.create({
-      post_id: req.body.post_id,
-      comment: req.body.comment,
-      user_id: userId.user_id,
-      create_date: new Date().getTime()
-    });
-    res.status(200).json(response);
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-};
-
-exports.getLikes = async (req, res, next) => {
-  let userId;
-  const postId = req.params.id;
-  const like = req.body;
-
-  if (req) {
-    const token = req.headers['x-access-token'];
-    const decoded = await jwt.verify(token, config.secret);
-    userId = await User.findByPk(decoded.id);
-  } else {
-    userId = null;
-  }
-
-  try {
-    const likeDislike = await Like.findAll({
-      where: { post_id: postId },
-      raw: true
-    });
-
-    Promise.all(likeDislike).then((values) => {
-      const result = { countVals: 0, userLiked: 0 };
-      result['countVals'] = values.length;
-      values.map((usr) => {
-        if (usr.like_by === userId.user_id) {
-          result['userLiked'] = 1;
-        } else {
-          result['userLiked'] = 0;
-        }
-      });
-      res.status(200).json(result);
-    });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-};
-
-exports.postLike = async (req, res, next) => {
-  let userId;
-  let postId;
-  if (req.body.post) {
-    postId = req.body.post;
-  }
-  if (req.params.id) {
-    postId = req.params.id;
-  }
-  const like = req.body;
-
-  if (req) {
-    const token = req.headers['x-access-token'];
-    const decoded = await jwt.verify(token, config.secret);
-    userId = await User.findByPk(decoded.id);
-  } else {
-    userId = null;
-  }
-
-  try {
-    const likeDislike = await Like.findAll({
-      where: { post_id: postId },
-      raw: true
-    });
-
-    Promise.all(likeDislike).then((values) => {
-      const result = { countVals: values.length, userLiked: 0 };
-
-      if (values.length !== 0) {
-        values.map((usr) => {
-          if (usr.like_by === userId.user_id) {
-            result['userLiked'] = 1;
-            res.status(200).json(result);
-          } else {
-            Like.create({
-              post_id: postId,
-              like_by: userId.user_id,
-              liket_time: new Date().getTime()
-            });
-            result['userLiked'] = 1;
-            result['countVals'] = values.length + 1;
-          }
-        });
-      } else {
-        Like.create({
-          post_id: postId,
-          like_by: userId.user_id,
-          liket_time: new Date().getTime()
-        });
-        result['userLiked'] = 1;
-        result['countVals'] = values.length + 1;
-      }
-
-      res.status(200).json(result);
-    });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-};
-
-exports.postUnLike = async (req, res, next) => {
-  let userId;
-  postId = req.params.id;
-
-  if (req) {
-    const token = req.headers['x-access-token'];
-    const decoded = await jwt.verify(token, config.secret);
-    userId = await User.findByPk(decoded.id);
-  } else {
-    userId = null;
-  }
-
-  try {
-    const likeDislike = await Like.findAll({
-      where: { post_id: postId },
-      raw: true
-    });
-
-    Promise.all(likeDislike).then((values) => {
-      const result = { countVals: values.length, userLiked: 0 };
-
-      values.map((usr) => {
-        if (usr.like_by === userId.user_id) {
-          Like.destroy({
-            where: { like_id: usr.like_id, like_by: userId.user_id }
-          });
-          result['userLiked'] = 0;
-          result['countVals'] = values.length - 1;
-        }
-      });
-      res.status(200).json(result);
-    });
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ message: err });
   }

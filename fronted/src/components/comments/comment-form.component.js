@@ -1,14 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { createComment } from '../../actions/comment';
+import { setMessage } from '../../actions/message';
 
-import { Button, Snackbar, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
-import MuiAlert from '@material-ui/lab/Alert';
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 /**
  * Formulaire d'ajout de commentaire
@@ -68,13 +64,18 @@ class AddNewComment extends Component {
       .then(() => {
         this.handleReset();
         this.setState({
-          ...this.state,
-          open: true,
+          ...this.state
+        });
+        this.props.setMessage({
           message: 'Félicitation votre commentaire est publié!'
         });
       })
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
+        this.props.setMessage({
+          message:
+            'Desolé nous rencontrons un probléme pour publier votre commentaire!',
+          severity: 'error'
+        });
       });
   }
 
@@ -98,10 +99,6 @@ class AddNewComment extends Component {
    * @memberof AddNewComment
    */
   render() {
-    const handleClose = () => {
-      this.setState({ ...this.state, open: false });
-    };
-
     return (
       <Fragment>
         <form autoComplete="off" onSubmit={this.commentPost}>
@@ -127,19 +124,9 @@ class AddNewComment extends Component {
             Poster
           </Button>
         </form>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={this.state.open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleClose} severity="success">
-            {this.state.message}
-          </Alert>
-        </Snackbar>
       </Fragment>
     );
   }
 }
 
-export default connect(null, { createComment })(AddNewComment);
+export default connect(null, { createComment, setMessage })(AddNewComment);

@@ -14,8 +14,22 @@ class PostsList extends Component {
       expanded: false
     };
   }
+
+  /**
+   * Charge les donnés du profile affiché
+   *
+   * @param userId Indiquer l'utilisateur en cours avec une props user_id
+   * @memberof PostsList
+   */
   componentDidMount() {
-    this.props.retrieveMyPosts();
+    this.props
+      .retrieveMyPosts(this.props.userId)
+      .then((res) => {
+        this.setState({ posts: res });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
@@ -28,7 +42,7 @@ class PostsList extends Component {
             posts
               .reverse()
               .map((res) => (
-                <PostComponent key={res.post_id} postId={res.post_id} />
+                <PostComponent key={res.post_id} post_id={res.post_id} />
               ))}
         </div>
       </Fragment>

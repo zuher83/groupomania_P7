@@ -25,15 +25,15 @@ export const retrieveComments = (postId) => async (dispatch) => {
       type: RETRIEVE_COMMENTS,
       payload: res.data
     });
-    // return Promise.resolve(res.data);
+    return Promise.resolve(res.data);
   } catch (err) {
-    console.log(err);
+    return Promise.reject(err);
   }
 };
 
 export const countComments = (postId) => async (dispatch) => {
   try {
-    const res = await ContentService.allComments(postId);
+    const res = await ContentService.countComments(postId);
 
     dispatch({
       type: COUNT_COMMENTS,
@@ -41,6 +41,6 @@ export const countComments = (postId) => async (dispatch) => {
     });
     return Promise.resolve(res.data);
   } catch (err) {
-    console.log(err);
+    return Promise.reject(err);
   }
 };

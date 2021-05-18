@@ -33,7 +33,7 @@ function postReducer(state = initialState, action) {
       });
 
     case DELETE_POST:
-      return state.filter(({ id }) => id !== payload.id);
+      return state.filter((post) => post.post_id !== payload);
 
     default:
       return state;

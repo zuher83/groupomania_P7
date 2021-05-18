@@ -33,13 +33,13 @@ export const retrieveAllPosts = () => async (dispatch) => {
       payload: res.data
     });
   } catch (err) {
-    console.log(err);
+    return Promise.reject(err);
   }
 };
 
-export const retrieveMyPosts = () => async (dispatch) => {
+export const retrieveMyPosts = (userId) => async (dispatch) => {
   try {
-    const res = await ContentService.myPosts();
+    const res = await ContentService.myPosts(userId);
     dispatch({
       type: RETRIEVE_POSTS,
       payload: res.data
@@ -83,10 +83,10 @@ export const deletePost = (postId) => async (dispatch) => {
 
     dispatch({
       type: DELETE_POST,
-      payload: { postId }
+      payload: postId
     });
   } catch (err) {
-    console.log(err);
+    return Promise.reject(err);
   }
 };
 

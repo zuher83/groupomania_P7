@@ -30,7 +30,7 @@ export default class Home extends Component {
       <Fragment>
         <CssBaseline />
         <div className="page">
-          <Container maxWidth="lg">
+          <Container maxWidth="md">
             <Grid container spacing={3}>
               <Grid item xs={4}>
                 <ProfilCard />
