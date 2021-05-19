@@ -171,3 +171,36 @@ exports.userDelete = async (req, res) => {
     }
   }
 };
+
+exports.checkRole = (req, res) => {
+  Role.findOne({
+    where: {
+      userId: req.params.id
+    }
+  })
+    .then((result) => {
+      console.log(result);
+
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err });
+    });
+};
+
+exports.setRole = (req, res) => {
+  const id = req.params.id;
+  var datas = req.body;
+
+  Role.update(datas, {
+    where: { userId: id }
+  })
+    .then(() => {
+      res.status(200).json({ message: 'Role mis à jour!' });
+    })
+    .catch(() => {
+      res.status(500).json({
+        message: 'Erreur de mise à jour du rôle'
+      });
+    });
+};

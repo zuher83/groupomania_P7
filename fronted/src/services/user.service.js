@@ -51,6 +51,18 @@ class UserService {
     });
   }
 
+  getRole(userId) {
+    return axios.get(API_URL + `role/${userId}`, {
+      headers: authHeader()
+    });
+  }
+
+  updateRole(userId, data) {
+    return axios.put(API_URL + `role/${userId}`, data, {
+      headers: authHeader()
+    });
+  }
+
   // Follow call Api
   followUnfollowPost(data) {
     return axios.post(API_URL + 'follow', data, {

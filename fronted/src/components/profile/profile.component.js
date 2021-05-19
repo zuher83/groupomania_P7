@@ -27,6 +27,7 @@ import WorkDepartment from './profile-fields/profile-field-workDepartment.compon
 import Bio from './profile-fields/profile-field-bio.component';
 import BirthDate from './profile-fields/profile-field-birth-date.component';
 import GeneralSettings from './profile-fields/profile-field-other.component';
+import RoleAttribute from './profile-fields/profile-field-role.component';
 
 const styles = () => ({
   root: {
@@ -59,6 +60,12 @@ const styles = () => ({
     position: 'absolute',
     bottom: 5,
     left: 10,
+    backgroundColor: '#fff'
+  },
+  editRole: {
+    position: 'absolute',
+    bottom: 5,
+    left: 70,
     backgroundColor: '#fff'
   }
 });
@@ -177,6 +184,12 @@ class Profile extends Component {
                     >
                       <DeleteForeverIcon />
                     </IconButton>
+                    <IconButton
+                      aria-label="editRole"
+                      className={classes.editRole}
+                    >
+                      <RoleAttribute user_id={currentUser} />
+                    </IconButton>
                   </CardMedia>
                   <CardContent className={classes.cardContent}>
                     <UserImageField
@@ -184,7 +197,6 @@ class Profile extends Component {
                       image={currentUser.image}
                     />
                     <GeneralSettings user_id={currentUser} />
-
                     {currentUser.joined && (
                       <Typography variant="body2" component="p">
                         Inscrit{' '}

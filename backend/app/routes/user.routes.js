@@ -37,4 +37,6 @@ module.exports = function (app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
+  app.get('/api/role/:id', [authJwt.verifyToken], controller.checkRole);
+  app.put('/api/role/:id', [authJwt.verifyToken], controller.setRole);
 };

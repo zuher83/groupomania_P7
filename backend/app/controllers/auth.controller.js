@@ -84,7 +84,7 @@ exports.signin = (req, res) => {
         res.status(200).json({
           user_id: user.user_id,
           roles: authorities,
-          accessToken: token,
+          accessToken: token
         });
       });
     })
