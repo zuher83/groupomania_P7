@@ -8,7 +8,6 @@ import CommentList from './../comments/comment-list.component';
 import CommentCount from './../comments/comment-count.component';
 import PostDeleteComponent from './post-delete.component';
 
-// import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import ReactTimeAgo from 'react-time-ago';
 
@@ -185,7 +184,10 @@ class OnePost extends Component {
       );
     }
 
-    if (this.state.currentUserRole === 'ROLE_ADMIN') {
+    if (
+      this.state.currentUserRole === 'ROLE_ADMIN' ||
+      this.state.currentUserRole === 'ROLE_MODERATOR'
+    ) {
       deleteButton = (
         <PostDeleteComponent post_id={this.state.currentPost.post_id} />
       );

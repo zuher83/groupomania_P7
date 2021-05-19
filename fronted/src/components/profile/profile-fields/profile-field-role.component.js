@@ -14,6 +14,7 @@ import {
   DialogTitle,
   MenuItem,
   InputLabel,
+  IconButton,
   FormControl,
   Select
 } from '@material-ui/core';
@@ -28,7 +29,13 @@ const styles = () => ({
       width: '47%'
     }
   },
-  editIconField: { cursor: 'pointer' }
+  editIconField: { cursor: 'pointer' },
+  iconButton: {
+    position: 'absolute',
+    bottom: 5,
+    left: 70,
+    backgroundColor: '#fff'
+  }
 });
 
 class ProfileRole extends Component {
@@ -143,10 +150,13 @@ class ProfileRole extends Component {
     return (
       <Fragment>
         {this.state.editable === true && (
-          <SupervisedUserCircle
-            className={classes.editIconField}
+          <IconButton
+            aria-label="editRole"
             onClick={this.handleClickOpen}
-          />
+            className={classes.iconButton}
+          >
+            <SupervisedUserCircle className={classes.editIconField} />
+          </IconButton>
         )}
         <Dialog
           disableBackdropClick

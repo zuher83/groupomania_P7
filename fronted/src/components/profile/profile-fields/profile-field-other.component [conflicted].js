@@ -51,7 +51,6 @@ class ProfileSettings extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     if (this.props.bio) {
       this.setState({ bio: this.props.bio });
     }

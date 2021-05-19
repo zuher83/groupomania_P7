@@ -12,10 +12,8 @@ import {
   Container,
   CssBaseline,
   Grid,
-  IconButton,
   Typography
 } from '@material-ui/core';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 import 'date-fns';
@@ -28,6 +26,7 @@ import Bio from './profile-fields/profile-field-bio.component';
 import BirthDate from './profile-fields/profile-field-birth-date.component';
 import GeneralSettings from './profile-fields/profile-field-other.component';
 import RoleAttribute from './profile-fields/profile-field-role.component';
+import DeleteProfile from './profile-fields/profile-delete.component';
 
 const styles = () => ({
   root: {
@@ -55,18 +54,6 @@ const styles = () => ({
   },
   rightText: {
     textAlign: 'right'
-  },
-  deleteProfile: {
-    position: 'absolute',
-    bottom: 5,
-    left: 10,
-    backgroundColor: '#fff'
-  },
-  editRole: {
-    position: 'absolute',
-    bottom: 5,
-    left: 70,
-    backgroundColor: '#fff'
   }
 });
 
@@ -79,7 +66,6 @@ const styles = () => ({
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.deleteUserProfile = this.deleteUserProfile.bind(this);
 
     this.state = {
       currentUser: {
@@ -132,30 +118,6 @@ class Profile extends Component {
   }
 
   /**
-   * Supprime le profile si l'utlisateur courant ou admin
-   *
-   * @memberof Profile
-   */
-  deleteUserProfile() {
-    const userId = this.props.match.params.id;
-    UserService.deleteUser(userId)
-      .then(() => {
-        this.setState({
-          messageOpen: true,
-          message: 'Profil supprimé!'
-        });
-
-        if (this.props.user.user_id === this.props.match.params.id) {
-          localStorage.removeItem('user');
-          location.reload();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  /**
    * Rendu du component
    *
    * @return {*}
@@ -175,21 +137,12 @@ class Profile extends Component {
                   <CardMedia
                     className={classes.media}
                     image="https://images.unsplash.com/photo-1547380109-a2fffd5b9036?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1524&q=80"
-                    title="Paella dish"
+                    title="Cover Image"
                   >
-                    <IconButton
-                      aria-label="delete"
-                      onClick={this.deleteUserProfile}
-                      className={classes.deleteProfile}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="editRole"
-                      className={classes.editRole}
-                    >
+                    <div>
+                      <DeleteProfile user_id={currentUser} />
                       <RoleAttribute user_id={currentUser} />
-                    </IconButton>
+                    </div>
                   </CardMedia>
                   <CardContent className={classes.cardContent}>
                     <UserImageField
