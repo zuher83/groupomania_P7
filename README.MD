@@ -24,9 +24,9 @@ cd backend
 npm install ou yarn install
 ```
 
-Installer le fronted
+Installer le frontend
 ```sh
-cd fronted
+cd frontend
 npm install ou yarn install
 ```
 
