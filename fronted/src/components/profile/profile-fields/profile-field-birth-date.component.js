@@ -186,7 +186,7 @@ class ProfileBirthDate extends Component {
 }
 
 ProfileBirthDate.propTypes = {
-  birthDate: PropTypes.string.isRequired
+  user_id: PropTypes.number.isRequired
 };
 
 // export default connect(mapStateToProps, {

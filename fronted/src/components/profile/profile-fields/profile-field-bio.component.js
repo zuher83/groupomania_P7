@@ -182,7 +182,7 @@ class ProfileBio extends Component {
 }
 
 ProfileBio.propTypes = {
-  bio: PropTypes.string.isRequired
+  user_id: PropTypes.number.isRequired
 };
 
 // export default connect(mapStateToProps, {

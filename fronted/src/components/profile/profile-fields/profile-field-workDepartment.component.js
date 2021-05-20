@@ -176,7 +176,7 @@ class ProfileWorkDepartment extends Component {
 }
 
 ProfileWorkDepartment.propTypes = {
-  workDepartment: PropTypes.string.isRequired
+  user_id: PropTypes.number.isRequired
 };
 
 export default connect(null, { editProfile, deleteUser, setMessage })(
