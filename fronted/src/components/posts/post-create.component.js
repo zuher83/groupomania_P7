@@ -168,6 +168,7 @@ class AddNewPost extends Component {
                 onBlur={this.onChangeTitle}
                 name="title"
                 label="Titre"
+                id="message-title"
                 value={this.state.title}
                 fullWidth
                 autoComplete="none"
@@ -179,6 +180,7 @@ class AddNewPost extends Component {
                 label="Message"
                 value={this.state.content}
                 fullWidth
+                id="message-post"
                 multiline
                 rows={6}
                 autoComplete="none"

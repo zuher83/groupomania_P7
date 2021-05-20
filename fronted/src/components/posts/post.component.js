@@ -210,6 +210,7 @@ class OnePost extends Component {
               <Avatar
                 className={classes.avatar}
                 src={this.state.author_image}
+                alt={`${this.state.currentPost.title}-user`}
               />
             }
             action={deleteButton}
@@ -226,7 +227,8 @@ class OnePost extends Component {
             <CardMedia
               className={classes.media}
               image={this.state.currentPost.image}
-              title="Image post"
+              title={`${this.state.currentPost.title}-media`}
+              alt={`${this.state.currentPost.title}-mediaAlt`}
               component="img"
             />
           )}
@@ -240,7 +242,7 @@ class OnePost extends Component {
             <LikeUnlike postId={this.state.currentPost.post_id} />
 
             <Badge
-              color="secondary"
+              color="primary"
               badgeContent={count_comments}
               className={clsx(classes.expand, {
                 [classes.expandOpen]: this.state.expanded

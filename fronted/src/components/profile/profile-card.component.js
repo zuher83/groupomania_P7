@@ -45,7 +45,7 @@ const styles = () => ({
   },
   link: {
     textDecoration: 'none',
-    color: red[600]
+    color: red[900]
   }
 });
 /**
@@ -128,7 +128,11 @@ class MyProfileCard extends Component {
               <div className={classes.header} />
               <CardContent className={classes.content}>
                 <Link to={'/me'} color="inherit">
-                  <Avatar className={classes.avatar} src={profile.image} />
+                  <Avatar
+                    className={classes.avatar}
+                    src={profile.image}
+                    alt={profile.name}
+                  />
                 </Link>
 
                 <div className={classes.userFields}>
@@ -136,7 +140,7 @@ class MyProfileCard extends Component {
                     <Link
                       to={`/user/${profile.user_id}`}
                       className={classes.link}
-                      color="primary"
+                      color="secondary"
                     >
                       {profile.name} {profile.last_name}
                     </Link>

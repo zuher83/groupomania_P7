@@ -145,7 +145,6 @@ class ProfileRole extends Component {
     let actualRole;
     if (this.state.actualRole) {
       actualRole = this.state.actualRole;
-      console.log(actualRole);
     }
     return (
       <Fragment>

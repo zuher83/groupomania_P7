@@ -77,11 +77,12 @@ class ProfileDelete extends Component {
     return (
       <Fragment>
         {this.state.editable === true && (
-          <IconButton aria-label="delete" className={classes.iconButton}>
-            <DeleteForeverIcon
-              className={classes.editIconField}
-              onClick={this.deleteUserProfile}
-            />
+          <IconButton
+            aria-label="delete"
+            onClick={this.deleteUserProfile}
+            className={classes.iconButton}
+          >
+            <DeleteForeverIcon className={classes.editIconField} />
           </IconButton>
         )}
       </Fragment>

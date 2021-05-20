@@ -134,7 +134,11 @@ class FollowedUsers extends Component {
               profile.reverse().map((res) => (
                 <ListItem key={res.user_id}>
                   <ListItemAvatar>
-                    <Avatar className={classes.avatar} src={res.image} />
+                    <Avatar
+                      className={classes.avatar}
+                      src={res.image}
+                      alt={`${res.name}-${res.last_name}-followed`}
+                    />
                   </ListItemAvatar>
                   <ListItemText
                     primary={`${res.name} ${res.last_name}`}

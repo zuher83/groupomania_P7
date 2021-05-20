@@ -181,6 +181,7 @@ class Login extends Component {
                     <Avatar
                       className={classes.avatar}
                       src="/groupomania-img1.png"
+                      alt="loge groupomania"
                     />
                     <Typography component="h1" variant="h5">
                       Connexion

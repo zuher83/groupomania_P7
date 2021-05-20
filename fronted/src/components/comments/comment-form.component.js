@@ -99,6 +99,10 @@ class AddNewComment extends Component {
    * @memberof AddNewComment
    */
   render() {
+    let post;
+    if (this.props.post) {
+      post = this.props.post;
+    }
     return (
       <Fragment>
         <form autoComplete="off" onSubmit={this.commentPost}>
@@ -109,9 +113,10 @@ class AddNewComment extends Component {
             label="Commentaire"
             value={this.state.comment}
             fullWidth
-            multiline
+            id={`${post}-label`}
+            // multiline
             variant="outlined"
-            rowsMax={6}
+            // rowsMax={6}
             autoComplete="none"
           />
           <Button

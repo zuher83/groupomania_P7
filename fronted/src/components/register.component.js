@@ -239,6 +239,7 @@ class Register extends Component {
                   <Avatar
                     className={classes.avatar}
                     src="/groupomania-img1.png"
+                    alt="logo groupomania"
                   />
                   <Typography component="h1" variant="h5">
                     Inscription

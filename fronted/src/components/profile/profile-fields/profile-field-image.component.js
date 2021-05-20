@@ -185,9 +185,14 @@ class ProfileAvatar extends Component {
               aria-label="recipe"
               className={classes.avatar}
               src={image}
+              alt={`${this.state.currentUser.name}-${this.state.currentUser.last_name}-avatar`}
             />
           ) : (
-            <Avatar aria-label="recipe" className={classes.avatar} />
+            <Avatar
+              aria-label="recipe"
+              className={classes.avatar}
+              alt={`${this.state.currentUser.name}-${this.state.currentUser.last_name}-avatar`}
+            />
           )}
 
           {this.state.editable === true && (
