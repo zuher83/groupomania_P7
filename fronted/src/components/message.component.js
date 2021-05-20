@@ -31,7 +31,6 @@ class DisplayMessage extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     this.setState({
       message: this.props.message,
       open: true
@@ -42,7 +41,6 @@ class DisplayMessage extends Component {
       });
     }
   }
-
 
   render() {
     const handleClose = () => {

@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
+import { history } from './../helpers/history';
 import { withStyles } from '@material-ui/styles';
 import {
   Box,
@@ -69,6 +70,7 @@ class Login extends Component {
     this.handleLogin = this.handleLogin.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
+    this.registerUser = this.registerUser.bind(this);
 
     this.state = {
       email: '',
@@ -101,6 +103,15 @@ class Login extends Component {
     this.setState({
       password: e.target.value
     });
+  }
+
+  /**
+   * Renvoi vers la page d'inscription
+   *
+   * @memberof Login
+   */
+  registerUser() {
+    history.push('/register');
   }
 
   /**
@@ -241,7 +252,11 @@ class Login extends Component {
                           </Link>
                         </Grid>
                         <Grid item>
-                          <Link href="/register" variant="body2">
+                          <Link
+                            href="#"
+                            onClick={this.registerUser}
+                            variant="body2"
+                          >
                             {'Créer un compte'}
                           </Link>
                         </Grid>

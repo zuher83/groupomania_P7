@@ -170,13 +170,11 @@ class Register extends Component {
     });
 
     this.props
-      .dispatch(
-        register(
-          this.state.name,
-          this.state.last_name,
-          this.state.email,
-          this.state.password
-        )
+      .register(
+        this.state.name,
+        this.state.last_name,
+        this.state.email,
+        this.state.password
       )
       .then(() => {
         this.setState({
@@ -353,6 +351,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { setMessage })(
+export default connect(mapStateToProps, { register, setMessage })(
   withStyles(styles)(Register)
 );

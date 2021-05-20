@@ -38,11 +38,9 @@ class PostsList extends Component {
       <Fragment>
         <div>
           {posts &&
-            posts
-              .reverse()
-              .map((res) => (
-                <PostComponent key={res.post_id} post_id={res.post_id} />
-              ))}
+            posts.map((res) => (
+              <PostComponent key={res.post_id} post_id={res.post_id} />
+            ))}
         </div>
       </Fragment>
     );

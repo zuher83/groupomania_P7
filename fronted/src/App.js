@@ -12,7 +12,7 @@ import ProfileList from './components/profile/profile-list.component';
 import BoardUser from './components/board-user.component';
 import MenuNavigation from './components/menu.component';
 
-import { clearMessage, setMessage } from './actions/message';
+import { clearMessage } from './actions/message';
 import Message from './components/message.component';
 
 import { history } from './helpers/history';

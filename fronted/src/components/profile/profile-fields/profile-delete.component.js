@@ -33,7 +33,8 @@ class ProfileDelete extends Component {
 
     this.state = {
       editable: false,
-      modal_open: false
+      modal_open: false,
+      userViewer: ''
     };
   }
 
@@ -44,6 +45,7 @@ class ProfileDelete extends Component {
       userViewer.user_id === this.props.user_id.user_id
     ) {
       this.setState({
+        userViewer: userViewer.user_id,
         editable: true
       });
     }
@@ -55,14 +57,15 @@ class ProfileDelete extends Component {
    * @memberof Profile
    */
   deleteUserProfile() {
-    const userId = this.props.match.params.id;
+    console.log(this.props);
+    const userId = this.props.user_id.user_id;
     UserService.deleteUser(userId)
       .then(() => {
         this.props.setMessage({
           message: 'Profil supprimé!'
         });
 
-        if (this.props.user.user_id === this.props.match.params.id) {
+        if (this.state.userViewer === this.props.user_id.user_id) {
           localStorage.removeItem('user');
           location.reload();
         }
