@@ -41,7 +41,7 @@ class ProfileBirthDate extends Component {
 
     this.state = {
       user_id: this.props.user_id,
-      birth_date: new Date(),
+      birth_date: '',
 
       editable: false,
       form_valid: false,

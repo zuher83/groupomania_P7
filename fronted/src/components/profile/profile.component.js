@@ -160,24 +160,15 @@ class Profile extends Component {
                       </Typography>
                     )}
 
-                    {currentUser.birth_date && (
-                      <BirthDate
-                        birthDate={currentUser.birth_date}
-                        user_id={currentUser.user_id}
-                      />
-                    )}
-                    {currentUser.work_department && (
-                      <WorkDepartment
-                        workDepartment={currentUser.work_department}
-                        user_id={currentUser.user_id}
-                      />
-                    )}
-                    {currentUser.bio && (
-                      <Bio
-                        bio={currentUser.bio}
-                        user_id={currentUser.user_id}
-                      />
-                    )}
+                    <BirthDate
+                      birthDate={currentUser.birth_date}
+                      user_id={currentUser.user_id}
+                    />
+                    <WorkDepartment
+                      workDepartment={currentUser.work_department}
+                      user_id={currentUser.user_id}
+                    />
+                    <Bio bio={currentUser.bio} user_id={currentUser.user_id} />
                   </CardContent>
                 </Card>
                 <MyPosts userId={this.props.match.params.id} />
