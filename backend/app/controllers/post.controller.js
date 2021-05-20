@@ -5,8 +5,8 @@ const Post = db.posts;
 const Like = db.likes;
 const User = db.users;
 const Comment = db.comments;
+const Follow = db.follow_user;
 
-// require('dotenv').config();
 
 exports.createPost = async (req, res, next) => {
   let userId;
@@ -44,8 +44,44 @@ exports.allPosts = async (req, res, next) => {
   try {
     const allPostsDb = await Post.findAll({
       attributes: ['post_id'],
-      order: [
-        ['post_created', 'DESC']
+      order: [['post_created', 'DESC']],
+      raw: true
+    });
+
+    Promise.all(allPostsDb).then((values) => {
+      res.status(200).json(values);
+    });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+};
+
+exports.friendsPosts = async (req, res, next) => {
+  try {
+    let userId;
+
+    if (req) {
+      const token = req.headers['x-access-token'];
+      const decoded = await jwt.verify(token, config.secret);
+      userId = await User.findByPk(decoded.id);
+    } else {
+      userId = null;
+    }
+
+    const allPostsDb = await Post.findAll({
+      where: {
+        user_id: {
+          [Sequelize.Op.not]: userId.user_id
+        }
+      },
+      attributes: ['post_id'],
+      order: [['post_created', 'DESC']],
+      include: [
+        {
+          model: Follow,
+          as: 'posts',
+          where: { follower_id: userId }
+        }
       ],
       raw: true
     });
@@ -76,8 +112,6 @@ exports.onePost = async (req, res, next) => {
 exports.myPosts = async (req, res, next) => {
   let user_id = req.params.id;
   if (req) {
-    // const token = req.headers['x-access-token'];
-    // const decoded = await jwt.verify(token, config.secret);
     userId = await User.findByPk(user_id);
   } else {
     userId = null;
@@ -87,9 +121,7 @@ exports.myPosts = async (req, res, next) => {
     const allPostsDb = await Post.findAll({
       attributes: ['post_id'],
       where: { author: userId.user_id },
-      order: [
-        ['post_created', 'DESC']
-      ],
+      order: [['post_created', 'DESC']],
       raw: true
     });
 
@@ -112,8 +144,6 @@ exports.deletePost = async (req, res, next) => {
     const result = await Post.destroy({
       where: { post_id: req.params.id }
     });
-    console.log(result);
-
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ message: err });
