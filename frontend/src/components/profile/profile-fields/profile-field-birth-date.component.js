@@ -189,11 +189,6 @@ ProfileBirthDate.propTypes = {
   user_id: PropTypes.number.isRequired
 };
 
-// export default connect(mapStateToProps, {
-//   editProfile,
-//   deleteUser,
-//   setMessage
-// })(withStyles(styles)(ProfileBirthDate));
 export default connect(null, { editProfile, deleteUser, setMessage })(
   withStyles(styles)(ProfileBirthDate)
 );

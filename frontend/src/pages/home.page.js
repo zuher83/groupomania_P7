@@ -4,7 +4,7 @@ import React, { Component, Fragment } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import CreatePost from '../components/posts/post-create.component';
-import AllPosts from '../components/posts/post-all.component';
+import AllPosts from './post-all.page';
 import ProfilCard from '../components/profile/profile-card.component';
 
 import Container from '@material-ui/core/Container';

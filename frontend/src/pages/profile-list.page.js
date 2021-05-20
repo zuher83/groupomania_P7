@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { Container, Grid, CssBaseline } from '@material-ui/core';
 import 'date-fns';
 import { withStyles } from '@material-ui/styles';
-import { getAllProfile } from './../../actions/auth';
-import ProfileCardComponent from './profile-list-card.component';
-import ProfilCard from './profile-card.component';
+import { getAllProfile } from './../actions/auth';
+import ProfileCardComponent from './../components/profile/profile-list-card.component';
+import ProfilCard from './../components/profile/profile-card.component';
 
 /**
  * Définition des classes à utiliser

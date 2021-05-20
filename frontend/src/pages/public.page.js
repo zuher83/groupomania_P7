@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Login from '../components/login.component';
+import Login from './login.page';
 
 export default class PublicHome extends Component {
   constructor(props) {

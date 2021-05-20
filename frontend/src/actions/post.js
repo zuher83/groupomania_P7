@@ -1,6 +1,7 @@
 import {
   CREATE_POST,
   RETRIEVE_POSTS,
+  RETRIEVE_FRIENDS_POSTS,
   RETRIEVE_POST,
   UPDATE_POST,
   DELETE_POST,
@@ -42,6 +43,18 @@ export const retrieveMyPosts = (userId) => async (dispatch) => {
     const res = await ContentService.myPosts(userId);
     dispatch({
       type: RETRIEVE_POSTS,
+      payload: res.data
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const retrieveFriendsPosts = (userId) => async (dispatch) => {
+  try {
+    const res = await ContentService.friendsPosts(userId);
+    dispatch({
+      type: RETRIEVE_FRIENDS_POSTS,
       payload: res.data
     });
   } catch (err) {

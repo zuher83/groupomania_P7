@@ -1,10 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import UserService from './../../services/user.service';
-import { editProfile, deleteUser } from '../../actions/auth';
-import MyPosts from './../posts/post-my.component';
-import Followed from './../follow/followed.component';
-
 import {
   Card,
   CardContent,
@@ -20,13 +15,17 @@ import 'date-fns';
 import ReactTimeAgo from 'react-time-ago';
 import { withStyles } from '@material-ui/styles';
 
-import UserImageField from './profile-fields/profile-field-image.component';
-import WorkDepartment from './profile-fields/profile-field-workDepartment.component';
-import Bio from './profile-fields/profile-field-bio.component';
-import BirthDate from './profile-fields/profile-field-birth-date.component';
-import GeneralSettings from './profile-fields/profile-field-other.component';
-import RoleAttribute from './profile-fields/profile-field-role.component';
-import DeleteProfile from './profile-fields/profile-delete.component';
+import UserService from './../services/user.service';
+import { editProfile, deleteUser } from './../actions/auth';
+import MyPosts from './../components/posts/post-my.component';
+import Followed from './../components/follow/followed.component';
+import UserImageField from './../components/profile/profile-fields/profile-field-image.component';
+import WorkDepartment from './../components/profile/profile-fields/profile-field-workDepartment.component';
+import Bio from './../components/profile/profile-fields/profile-field-bio.component';
+import BirthDate from './../components/profile/profile-fields/profile-field-birth-date.component';
+import GeneralSettings from './../components/profile/profile-fields/profile-field-other.component';
+import RoleAttribute from './../components/profile/profile-fields/profile-field-role.component';
+import DeleteProfile from './../components/profile/profile-fields/profile-delete.component';
 
 const styles = () => ({
   root: {
@@ -132,7 +131,7 @@ class Profile extends Component {
           <CssBaseline />
           <Container maxWidth="md" className={classes.root}>
             <Grid container spacing={3}>
-              <Grid item xs={8}>
+              <Grid item xs={12} md={8}>
                 <Card>
                   <CardMedia
                     className={classes.media}
@@ -173,7 +172,7 @@ class Profile extends Component {
                 </Card>
                 <MyPosts userId={this.props.match.params.id} />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12} md={4}>
                 {currentUser.user_id && (
                   <Followed userId={currentUser.user_id} />
                 )}

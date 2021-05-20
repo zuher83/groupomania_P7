@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
-import { history } from './../helpers/history';
+import { history } from '../helpers/history';
 import { withStyles } from '@material-ui/styles';
 import {
   Box,
@@ -163,13 +163,7 @@ class Login extends Component {
 
           <Box className={(classes.root, classes.image)}>
             <Container>
-              <Grid
-                container
-                // component="main"
-                direction="row"
-                justify="center"
-                // alignItems="center"
-              >
+              <Grid container direction="row" justify="center">
                 <Grid item xs={false} sm={3} md={7}>
                   <Typography
                     component="h1"

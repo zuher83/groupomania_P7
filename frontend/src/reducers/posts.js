@@ -2,6 +2,7 @@ import {
   CREATE_POST,
   RETRIEVE_POST,
   RETRIEVE_POSTS,
+  RETRIEVE_FRIENDS_POSTS,
   UPDATE_POST,
   DELETE_POST
 } from '../actions/types';
@@ -15,6 +16,9 @@ function postReducer(state = initialState, action) {
       return [...state, payload];
 
     case RETRIEVE_POSTS:
+      return payload;
+
+    case RETRIEVE_FRIENDS_POSTS:
       return payload;
 
     case RETRIEVE_POST:

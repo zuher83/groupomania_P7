@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { retrieveAllPosts } from '../../actions/post';
-import PostComponent from './post.component';
+import { retrieveAllPosts } from '../actions/post';
+import PostComponent from '../components/posts/post.component';
 
 import { withStyles } from '@material-ui/styles';
 
@@ -38,9 +38,11 @@ class PostsList extends Component {
       <Fragment>
         <div>
           {posts &&
-            posts.map((res) => (
-              <PostComponent key={res.post_id} post_id={res.post_id} />
-            ))}
+            posts
+              .reverse()
+              .map((res) => (
+                <PostComponent key={res.post_id} post_id={res.post_id} />
+              ))}
         </div>
       </Fragment>
     );

@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Router, Switch, Route } from 'react-router-dom';
 
-// Import Components
-import Login from './components/login.component';
-import Register from './components/register.component';
-import PublicHome from './components/public.component';
-import Home from './components/home.component';
-import Profile from './components/profile/profile.component';
-import ProfileList from './components/profile/profile-list.component';
-import BoardUser from './components/board-user.component';
+// Import Pages
+import Login from './pages/login.page';
+import Register from './pages/register.page';
+import PublicHome from './pages/public.page';
+import Home from './pages/home.page';
+import FeedFollowed from './pages/feed-followed.page';
+import Profile from './pages/profile.page';
+import ProfileList from './pages/profile-list.page';
+
 import MenuNavigation from './components/menu.component';
 
 import { clearMessage } from './actions/message';
@@ -120,7 +121,11 @@ class App extends Component {
               <Route exact path="/register" component={Register} />
               <PrivateRoute path="/user/:id" component={Profile} />
               <PrivateRoute exact path="/home" component={Home} />
-              <PrivateRoute exact path="/user" component={BoardUser} />
+              <PrivateRoute
+                exact
+                path="/friends-feed"
+                component={FeedFollowed}
+              />
               <PrivateRoute exact path="/users" component={ProfileList} />
             </Switch>
           </div>

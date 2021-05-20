@@ -116,6 +116,15 @@ class AppMenu extends Component {
             </Typography>
             <Typography variant="h6" className={classes.menuItem}>
               <Link
+                to={`/friends-feed`}
+                className={classes.menuLink}
+                variant="body2"
+              >
+                Feed
+              </Link>
+            </Typography>
+            <Typography variant="h6" className={classes.menuItem}>
+              <Link
                 to={`/user/${currentUser.user_id}`}
                 className={classes.menuLink}
                 variant="body2"

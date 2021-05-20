@@ -17,6 +17,7 @@ export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';
 // Post Actions
 export const CREATE_POST = 'CREATE_POST';
 export const RETRIEVE_POSTS = 'RETRIEVE_POSTS';
+export const RETRIEVE_FRIENDS_POSTS = 'RETRIEVE_FRIENDS_POSTS';
 export const RETRIEVE_POST = 'RETRIEVE_POST';
 export const UPDATE_POST = 'UPDATE_POST';
 export const DELETE_POST = 'DELETE_POST';

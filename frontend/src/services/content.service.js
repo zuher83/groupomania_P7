@@ -8,6 +8,10 @@ class ContentService {
     return axios.get(API_URL + 'posts-all', { headers: authHeader() });
   }
 
+  friendsPosts() {
+    return axios.get(API_URL + 'posts-friends/:id', { headers: authHeader() });
+  }
+
   onePost(postId) {
     return axios.get(API_URL + `posts-get/${postId}`, {
       headers: authHeader()
