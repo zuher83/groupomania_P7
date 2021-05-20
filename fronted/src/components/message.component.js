@@ -30,19 +30,19 @@ class DisplayMessage extends Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.message !== this.props.message) {
+  componentDidMount() {
+    console.log(this.props);
+    this.setState({
+      message: this.props.message,
+      open: true
+    });
+    if (this.props.severity) {
       this.setState({
-        message: this.props.message,
-        open: true
+        severity: this.props.severity
       });
-      if (this.props.severity) {
-        this.setState({
-          severity: this.props.severity
-        });
-      }
     }
   }
+
 
   render() {
     const handleClose = () => {

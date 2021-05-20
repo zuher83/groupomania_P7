@@ -44,6 +44,9 @@ exports.allPosts = async (req, res, next) => {
   try {
     const allPostsDb = await Post.findAll({
       attributes: ['post_id'],
+      order: [
+        ['post_created', 'DESC']
+      ],
       raw: true
     });
 
@@ -84,6 +87,9 @@ exports.myPosts = async (req, res, next) => {
     const allPostsDb = await Post.findAll({
       attributes: ['post_id'],
       where: { author: userId.user_id },
+      order: [
+        ['post_created', 'DESC']
+      ],
       raw: true
     });
 

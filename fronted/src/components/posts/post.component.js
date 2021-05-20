@@ -69,9 +69,11 @@ class OnePost extends Component {
       },
       author_name: '',
       author_image: '',
+      author_id: '',
       currentIndex: -1,
       expanded: false,
-      currentUserRole: 'ROLE_USER'
+      currentUserRole: 'ROLE_USER',
+      currentUserId: ''
     };
   }
 
@@ -86,7 +88,8 @@ class OnePost extends Component {
     this.getPost(this.props.post_id);
     const user = JSON.parse(localStorage.getItem('user'));
     this.setState({
-      currentUserRole: user.roles[0]
+      currentUserRole: user.roles[0],
+      currentUserId: user.user_id
     });
   }
 
@@ -128,7 +131,8 @@ class OnePost extends Component {
         if (this._isMounted) {
           this.setState({
             author_name: response.data.name + ' ' + response.data.last_name,
-            author_image: response.data.image
+            author_image: response.data.image,
+            author_id: response.data.user_id
           });
         }
       })
@@ -186,7 +190,8 @@ class OnePost extends Component {
 
     if (
       this.state.currentUserRole === 'ROLE_ADMIN' ||
-      this.state.currentUserRole === 'ROLE_MODERATOR'
+      this.state.currentUserRole === 'ROLE_MODERATOR' ||
+      this.state.currentUserId === this.state.author_id
     ) {
       deleteButton = (
         <PostDeleteComponent post_id={this.state.currentPost.post_id} />

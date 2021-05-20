@@ -30,8 +30,6 @@ class DeletePostComponent extends Component {
    * @memberof DeletePostComponent
    */
   deleteCurrentPost() {
-    console.log(this.props);
-
     const currentPost = this.props.post_id;
 
     this.props

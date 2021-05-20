@@ -93,7 +93,6 @@ class ProfileWorkDepartment extends Component {
     var datas = {
       work_department: this.state.work_department
     };
-    console.log(datas);
     this.props
       .editProfile(this.props.user_id, datas)
       .then(() => {
@@ -176,23 +175,10 @@ class ProfileWorkDepartment extends Component {
   }
 }
 
-// function mapStateToProps(state) {
-//   console.log(state);
-//   const { user } = state.auth;
-//   return {
-//     user
-//   };
-// }
-
 ProfileWorkDepartment.propTypes = {
   workDepartment: PropTypes.string.isRequired
 };
 
-// export default connect(mapStateToProps, {
-//   editProfile,
-//   deleteUser,
-//   setMessage
-// })(withStyles(styles)(ProfileWorkDepartment));
 export default connect(null, { editProfile, deleteUser, setMessage })(
   withStyles(styles)(ProfileWorkDepartment)
 );

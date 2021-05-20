@@ -55,8 +55,6 @@ class App extends Component {
     super(props);
 
     this.state = {
-      showModeratorBoard: false,
-      showAdminBoard: false,
       currentUser: undefined,
       anchorEl: null,
       open: false,
