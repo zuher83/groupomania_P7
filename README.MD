@@ -30,7 +30,7 @@ cd frontend
 npm install ou yarn install
 ```
 
-Ensuite importez le fichier `groupomaniaSql.sql`dans votre base de donnée Mysql pour créer les tables. Un utilisateur `admin@admin`est crée automatiquement avec les priviléges élevé. Le mot de passe par défaut est `000000`
+Ensuite importez le fichier `groupomaniaSql.sql` dans votre base de donnée Mysql pour créer les tables. Un utilisateur `admin@groupomania.com`est crée automatiquement avec les priviléges élevé. Le mot de passe par défaut est `000000`
 
 Vous pouvez également importer le fichier `groupomaniaSqlDemo.sql` qui contient des données de démonstration. Tous les utilisateur ont le mot de passe `000000`
 
@@ -38,4 +38,6 @@ Vous pouvez également importer le fichier `groupomaniaSqlDemo.sql` qui contient
 
 > Configurer la clé secrete pour JWT en modifiant le fichier `backend/app/config/db.config.js`
 
-> Créer un fichier `.env` dans le dossier `fronted/` et indiquez le port. Par defaut la configuration est `PORT=8081`
+> Créer un fichier `.env` dans le dossier `fronted/` et indiquez le port. Par defaut la configuration est `PORT=8081`. Vous pouvez renommer le fichier env.exemple en .env
+
+Selon votre configuration vous devez parametrer le fichier url.constant.js dans le dossier ```frontend/constants/``` en indiquant l'url de l'API.
