@@ -12,9 +12,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Fab,
   MenuItem,
   InputLabel,
-  IconButton,
   FormControl,
   Select
 } from '@material-ui/core';
@@ -33,8 +33,7 @@ const styles = () => ({
   iconButton: {
     position: 'absolute',
     bottom: 5,
-    left: 70,
-    backgroundColor: '#fff'
+    left: 70
   }
 });
 
@@ -44,35 +43,52 @@ class ProfileRole extends Component {
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.updateRole = this.updateRole.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
 
     this.state = {
-      user: this.props.user,
+      user: '',
       actualRole: '',
       role: '',
 
-      editable: false,
+      role_editable: false,
       form_valid: false,
       modal_open: false
     };
   }
 
   componentDidMount() {
-    if (this.props.user_id) {
+    this.updateRole();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.user_id !== this.props.user_id) {
+      this.updateRole();
+    }
+  }
+
+  updateRole() {
+    if (this.props.user_id.user_id) {
       this.setState({ user: this.props.user_id });
       UserService.getRole(this.props.user_id.user_id)
         .then((result) => {
-          this.setState({ actualRole: result.data.roleId });
+          this.setState({
+            actualRole: result.data.roleId,
+            role: result.data.roleId
+          });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          this.props.setMessage({
+            message: 'Erreur lors du chargement du rôle!',
+            severity: 'error'
+          });
         });
     }
 
     const userViewer = JSON.parse(localStorage.getItem('user'));
     if (userViewer.roles[0] === 'ROLE_ADMIN') {
       this.setState({
-        editable: true
+        role_editable: true
       });
     }
   }
@@ -142,20 +158,17 @@ class ProfileRole extends Component {
 
   render() {
     const { classes } = this.props;
-    let actualRole;
-    if (this.state.actualRole) {
-      actualRole = this.state.actualRole;
-    }
     return (
       <Fragment>
-        {this.state.editable === true && (
-          <IconButton
-            aria-label="editRole"
+        {this.state.role_editable === true && (
+          <Fab
+            color="primary"
+            className={(classes.fab, classes.iconButton)}
             onClick={this.handleClickOpen}
-            className={classes.iconButton}
+            size="small"
           >
             <SupervisedUserCircle className={classes.editIconField} />
-          </IconButton>
+          </Fab>
         )}
         <Dialog
           disableBackdropClick
@@ -177,13 +190,18 @@ class ProfileRole extends Component {
                     value={this.state.role}
                     fullWidth
                     name="role"
-                    defaultValue={actualRole}
                     onChange={this.handleChange}
                     label="Rôle"
                   >
-                    <MenuItem value={1}>Membre</MenuItem>
-                    <MenuItem value={2}>Moderateur</MenuItem>
-                    <MenuItem value={3}>Admin</MenuItem>
+                    <MenuItem value={1} key={1}>
+                      Membre
+                    </MenuItem>
+                    <MenuItem value={2} key={2}>
+                      Moderateur
+                    </MenuItem>
+                    <MenuItem value={3} key={3}>
+                      Admin
+                    </MenuItem>
                   </Select>
                 </FormControl>
               </div>

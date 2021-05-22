@@ -7,11 +7,10 @@ import Login from './pages/login.page';
 import Register from './pages/register.page';
 import PublicHome from './pages/public.page';
 import Home from './pages/home.page';
-import FeedFollowed from './pages/feed-followed.page';
 import Profile from './pages/profile.page';
 import ProfileList from './pages/profile-list.page';
 
-import MenuNavigation from './components/menu.component';
+import MenuNavigation from './components/menu/menu.component';
 
 import { clearMessage } from './actions/message';
 import Message from './components/message.component';
@@ -121,11 +120,6 @@ class App extends Component {
               <Route exact path="/register" component={Register} />
               <PrivateRoute path="/user/:id" component={Profile} />
               <PrivateRoute exact path="/home" component={Home} />
-              <PrivateRoute
-                exact
-                path="/friends-feed"
-                component={FeedFollowed}
-              />
               <PrivateRoute exact path="/users" component={ProfileList} />
             </Switch>
           </div>

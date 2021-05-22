@@ -47,7 +47,7 @@ class FollowedUsers extends Component {
     this.state = {
       user_id: '',
       followed: [],
-      userFallow: 0,
+      userFollow: 0,
       expanded: false
     };
   }
@@ -99,13 +99,13 @@ class FollowedUsers extends Component {
    */
   followUnfollow() {
     const userId = this.props.userId;
-    const state = this.state.userFallow;
+    const state = this.state.userFollow;
 
     this.props
       .followUnfollow(userId, state)
       .then((response) => {
         this.setState({
-          userFallow: response
+          userFollow: response
         });
       })
       .catch((e) => {

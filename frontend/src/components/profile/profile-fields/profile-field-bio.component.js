@@ -20,7 +20,7 @@ import { withStyles } from '@material-ui/styles';
 
 const styles = () => ({
   root: {
-    minWidth: 275,
+    // minWidth: 275,
     '& .MuiTextField-root': {
       margin: 8
     },
@@ -56,6 +56,19 @@ class ProfileBio extends Component {
       this.setState({
         editable: true
       });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.user_id !== this.props.user_id) {
+      this.setState({ bio: this.props.bio });
+
+      const userViewer = JSON.parse(localStorage.getItem('user'));
+      if (userViewer.user_id === this.props.user_id.user_id) {
+        this.setState({
+          editable: true
+        });
+      }
     }
   }
 
@@ -143,12 +156,12 @@ class ProfileBio extends Component {
         <Dialog
           disableBackdropClick
           fullWidth
-          maxWidth="md"
+          // maxWidth="md"
           open={this.state.modal_open}
           onClose={this.handleClose}
         >
           <DialogTitle>Dites nous quelques mots sur vous?</DialogTitle>
-          <form className={classes.root} onSubmit={this.handleFormSubmit}>
+          <form onSubmit={this.handleFormSubmit}>
             <DialogContent>
               <TextField
                 id="edit-bio"

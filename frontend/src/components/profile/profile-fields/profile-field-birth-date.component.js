@@ -61,6 +61,19 @@ class ProfileBirthDate extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.user_id !== this.props.user_id) {
+      this.setState({ birth_date: this.props.birthDate });
+
+      const userViewer = JSON.parse(localStorage.getItem('user'));
+      if (userViewer.user_id === this.props.user_id.user_id) {
+        this.setState({
+          editable: true
+        });
+      }
+    }
+  }
+
   /**
    * Suit les changement de formulaire lors de l'édition de la date de naissance
    * pour les stocker dans le state

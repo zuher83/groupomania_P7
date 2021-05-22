@@ -67,6 +67,5 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "redux-devtools-extension": "^2.13.8"
-  },
-  "proxy": "http://localhost:3000"
+  }
 }

@@ -81,8 +81,14 @@ exports.signin = (req, res) => {
         for (let i = 0; i < roles.length; i++) {
           authorities.push('ROLE_' + roles[i].name.toUpperCase());
         }
+        if (user.image) {
+          user.image = process.env.BACKEND_URL + '/images/' + user.image;
+        }
         res.status(200).json({
           user_id: user.user_id,
+          name: user.name,
+          last_name: user.last_name,
+          image: user.image,
           roles: authorities,
           accessToken: token
         });

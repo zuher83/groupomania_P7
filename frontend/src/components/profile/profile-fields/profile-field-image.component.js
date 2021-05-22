@@ -29,6 +29,9 @@ const styles = () => ({
     },
     marginTop: 20
   },
+  ModalContent: {
+    overflow: 'hidden'
+  },
   avatarWrapper: {
     position: 'relative'
   },
@@ -72,11 +75,12 @@ class ProfileAvatar extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleImageSubmit = this.handleImageSubmit.bind(this);
     this.selectFile = this.selectFile.bind(this);
+    this.checkIfEditable = this.checkIfEditable.bind(this);
 
     this.state = {
       currentUser: {
-        user_id: this.props.user_id,
-        image: this.props.image
+        user_id: '',
+        image: ''
       },
       image: '',
       previewImage: undefined,
@@ -89,6 +93,41 @@ class ProfileAvatar extends Component {
   }
 
   componentDidMount() {
+    this.checkIfEditable();
+    this.setState({
+      currentUser: {
+        user_id: this.props.user_id,
+        image: this.props.image
+      }
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.user_id !== this.props.user_id) {
+      this.checkIfEditable();
+      this.setState({ currentUser: { image: this.props.user.image } });
+    }
+  }
+
+  async reloadImage() {
+    return await UserService.getProfile(this.props.user_id)
+      .then((result) => {
+        this.setState({
+          currentUser: {
+            image: result.data.image
+          }
+        });
+      })
+      .catch(() => {
+        this.props.setMessage({
+          message:
+            'Impossible de recharger la nouvelle photo de profil! Veuillez actualiser la page!',
+          severity: 'error'
+        });
+      });
+  }
+
+  checkIfEditable() {
     const userViewer = JSON.parse(localStorage.getItem('user'));
     if (userViewer.user_id === this.props.user_id) {
       this.setState({
@@ -120,7 +159,10 @@ class ProfileAvatar extends Component {
   selectFile(event) {
     this.setState({
       image: event.target.files[0],
-      previewImage: URL.createObjectURL(event.target.files[0])
+      previewImage: URL.createObjectURL(event.target.files[0]),
+      currentUser: {
+        image: URL.createObjectURL(event.target.files[0])
+      }
     });
   }
 
@@ -154,6 +196,8 @@ class ProfileAvatar extends Component {
         this.props.setMessage({
           message: 'Photo de profil mise à jour avec succès'
         });
+
+        this.reloadImage();
       })
       .catch(() => {
         this.props.setMessage({
@@ -176,7 +220,7 @@ class ProfileAvatar extends Component {
   }
 
   render() {
-    const { classes, image } = this.props;
+    const { classes } = this.props;
     return (
       <Fragment>
         <div className={classes.avatarWrapper}>
@@ -184,7 +228,7 @@ class ProfileAvatar extends Component {
             <Avatar
               aria-label="recipe"
               className={classes.avatar}
-              src={image}
+              src={this.state.currentUser.image}
               alt={`${this.state.currentUser.name}-${this.state.currentUser.last_name}-avatar`}
             />
           ) : (
@@ -215,7 +259,7 @@ class ProfileAvatar extends Component {
         >
           <DialogTitle>Éditer votre image de profil</DialogTitle>
           <form className={classes.root} onSubmit={this.handleImageSubmit}>
-            <DialogContent>
+            <DialogContent className={classes.ModalContent}>
               <div className={classes.grid}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={4}>

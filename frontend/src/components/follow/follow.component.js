@@ -23,7 +23,7 @@ class FollowUnfollow extends Component {
 
     this.state = {
       user_id: '',
-      userFallow: 0,
+      userFollow: 0,
       expanded: false
     };
   }
@@ -39,7 +39,7 @@ class FollowUnfollow extends Component {
       .getFollowed(userId)
       .then((response) => {
         this.setState({
-          userFallow: response.userFallow
+          userFollow: response.userFollow
         });
       })
       .catch((e) => {
@@ -49,13 +49,13 @@ class FollowUnfollow extends Component {
 
   followUnfollow() {
     const userId = this.props.userId;
-    const state = this.state.userFallow;
+    const state = this.state.userFollow;
 
     this.props
       .followUnfollow(userId, state)
       .then((response) => {
         this.setState({
-          userFallow: response
+          userFollow: response
         });
       })
       .catch((e) => {
@@ -67,7 +67,7 @@ class FollowUnfollow extends Component {
     const { classes } = this.props;
     return (
       <Fragment>
-        {this.state.userFallow === 1 ? (
+        {this.state.userFollow === 1 ? (
           <div className={classes.followButton}>
             <Tooltip title="Arrêter de suivre">
               <IconButton
@@ -96,7 +96,7 @@ class FollowUnfollow extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  userFallow: state.userFallow
+  userFollow: state.userFollow
 });
 
 export default connect(mapStateToProps, {

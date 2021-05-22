@@ -55,12 +55,12 @@ exports.FollowUnfollowGet = async (req, res, next) => {
     });
 
     Promise.all(followUnfollow).then((values) => {
-      const result = { userFallow: 0 };
+      const result = { userFollow: 0 };
       values.map((usr) => {
         if (usr.follower_id === followed.user_id) {
-          result['userFallow'] = 1;
+          result['userFollow'] = 1;
         } else {
-          result['userFallow'] = 0;
+          result['userFollow'] = 0;
         }
       });
       res.status(200).json(result);

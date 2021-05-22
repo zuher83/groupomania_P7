@@ -15,7 +15,7 @@ module.exports = function (app) {
   app.get('/api/posts-all', [authJwt.verifyToken], postController.allPosts);
   app.get('/api/posts-get/:id', [authJwt.verifyToken], postController.onePost);
   app.get('/api/posts-my/:id', [authJwt.verifyToken], postController.myPosts);
-  app.get('/api/posts-friends/:id', [authJwt.verifyToken], postController.friendsPosts);
+  app.get('/api/posts-friends', [authJwt.verifyToken], postController.friendsPosts);
   app.post(
     '/api/posts-create',
     [authJwt.verifyToken],

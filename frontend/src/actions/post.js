@@ -50,9 +50,9 @@ export const retrieveMyPosts = (userId) => async (dispatch) => {
   }
 };
 
-export const retrieveFriendsPosts = (userId) => async (dispatch) => {
+export const retrieveFriendsPosts = () => async (dispatch) => {
   try {
-    const res = await ContentService.friendsPosts(userId);
+    const res = await ContentService.friendsPosts();
     dispatch({
       type: RETRIEVE_FRIENDS_POSTS,
       payload: res.data

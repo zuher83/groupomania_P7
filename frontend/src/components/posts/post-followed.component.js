@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { retrieveFriendsPosts } from '../actions/post';
-import PostComponent from '../components/posts/post.component';
+import { retrieveFriendsPosts } from './../../actions/post';
+import PostComponent from './post.component';
 
 import { withStyles } from '@material-ui/styles';
 
@@ -18,13 +18,15 @@ class PostsFriendsList extends Component {
   /**
    * Charge les posts des membres suivi
    *
-   * @param userId Indiquer l'utilisateur en cours avec une props user_id
+   * @param user_id Indiquer l'utilisateur en cours avec une props user_id
    * @memberof PostsFriendsList
    */
   componentDidMount() {
     this.props
-      .retrieveFriendsPosts(this.props.userId)
+      .retrieveFriendsPosts()
       .then((res) => {
+        console.log(res);
+
         this.setState({ posts: res });
       })
       .catch((err) => {
@@ -33,13 +35,13 @@ class PostsFriendsList extends Component {
   }
 
   render() {
-    const { posts } = this.props;
+    const { friend_posts } = this.props;
 
     return (
       <Fragment>
         <div>
-          {posts &&
-            posts
+          {friend_posts &&
+            friend_posts
               .reverse()
               .map((res) => (
                 <PostComponent key={res.post_id} post_id={res.post_id} />
@@ -51,7 +53,7 @@ class PostsFriendsList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  posts: state.posts
+  friend_posts: state.posts
 });
 
 export default connect(mapStateToProps, {

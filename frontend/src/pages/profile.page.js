@@ -91,6 +91,12 @@ class Profile extends Component {
     this.getUserDatas(this.props.match.params.id);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.getUserDatas(this.props.match.params.id);
+    }
+  }
+
   /**
    * Charge les données du profile
    *
@@ -131,7 +137,7 @@ class Profile extends Component {
           <CssBaseline />
           <Container maxWidth="md" className={classes.root}>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={8} lg={8}>
                 <Card>
                   <CardMedia
                     className={classes.media}
@@ -172,10 +178,8 @@ class Profile extends Component {
                 </Card>
                 <MyPosts userId={this.props.match.params.id} />
               </Grid>
-              <Grid item xs={12} md={4}>
-                {currentUser.user_id && (
-                  <Followed userId={currentUser.user_id} />
-                )}
+              <Grid item xs={12} md={4} lg={4}>
+                <Followed userId={currentUser.user_id} />
               </Grid>
             </Grid>
           </Container>

@@ -1,6 +1,4 @@
 import React, { Component, Fragment } from 'react';
-// import { Redirect } from 'react-router-dom';
-
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import CreatePost from '../components/posts/post-create.component';
@@ -32,10 +30,10 @@ export default class Home extends Component {
         <div className="page">
           <Container maxWidth="md">
             <Grid container spacing={3}>
-              <Grid item xs={4}>
+              <Grid item xs={false} md={4}>
                 <ProfilCard />
               </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={12} md={8}>
                 <CreatePost />
                 <AllPosts />
               </Grid>

@@ -32,6 +32,19 @@ class PostsList extends Component {
       });
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.userId !== this.props.userId) {
+      this.props
+        .retrieveMyPosts(this.props.userId)
+        .then((res) => {
+          this.setState({ posts: res });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
   render() {
     const { posts } = this.props;
 

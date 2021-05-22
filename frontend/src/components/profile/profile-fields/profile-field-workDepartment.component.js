@@ -59,6 +59,19 @@ class ProfileWorkDepartment extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.user_id !== this.props.user_id) {
+      this.setState({ work_department: this.props.workDepartment });
+
+      const userViewer = JSON.parse(localStorage.getItem('user'));
+      if (userViewer.user_id === this.props.user_id.user_id) {
+        this.setState({
+          editable: true
+        });
+      }
+    }
+  }
+
   /**
    * Suit les changement de formulaire lors de l'édition du poste
    * pour les stocker dans le state

@@ -179,8 +179,6 @@ exports.checkRole = (req, res) => {
     }
   })
     .then((result) => {
-      console.log(result);
-
       res.status(200).json(result);
     })
     .catch((err) => {

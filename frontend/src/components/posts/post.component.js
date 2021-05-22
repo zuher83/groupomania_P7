@@ -23,6 +23,7 @@ import {
   Typography
 } from '@material-ui/core';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import StarsIcon from '@material-ui/icons/Stars';
 import { red } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/styles';
 
@@ -41,6 +42,12 @@ const styles = () => ({
   },
   username: {
     marginLeft: 15
+  },
+  notFollowedAuthor: {
+    // backgroundColor: 'red'
+  },
+  followedAuthor: {
+    borderTop: '4px solid red'
   }
 });
 
@@ -72,6 +79,7 @@ class OnePost extends Component {
       author_id: '',
       currentIndex: -1,
       expanded: false,
+      userFollow: 0,
       currentUserRole: 'ROLE_USER',
       currentUserId: ''
     };
@@ -134,6 +142,7 @@ class OnePost extends Component {
             author_image: response.data.image,
             author_id: response.data.user_id
           });
+          this.checkIfAuthorFollow(response.data.user_id);
         }
       })
       .catch((e) => {
@@ -151,6 +160,20 @@ class OnePost extends Component {
       })
       .catch((err) => {
         console.log(err);
+      });
+  }
+
+  checkIfAuthorFollow(userId) {
+    UserService.FollowUnfollowGet(userId)
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            userFollow: response.data.userFollow
+          });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
       });
   }
 
@@ -198,10 +221,21 @@ class OnePost extends Component {
       );
     }
 
-    let count_comments = 0;
+    let count_comments;
     if (this.state.currentPost.post_id) {
-      count_comments = <CommentCount post={this.state.currentPost.post_id} />;
+      count_comments = (
+        <CommentCount
+          post={this.state.currentPost.post_id}
+          key={this.state.currentPost.post_id}
+        />
+      );
     }
+
+    const followedIcon = (
+      <span>
+        <StarsIcon style={{ color: red[900] }} /> {this.state.currentPost.title}
+      </span>
+    );
 
     return (
       <Fragment>
@@ -210,18 +244,36 @@ class OnePost extends Component {
           key={this.state.currentPost.post_id}
           variant="outlined"
         >
-          <CardHeader
-            avatar={
-              <Avatar
-                className={classes.avatar}
-                src={this.state.author_image}
-                alt={`${this.state.currentPost.title}-user`}
-              />
-            }
-            action={deleteButton}
-            title={this.state.currentPost.title}
-            subheader={dateCreate}
-          />
+          {this.state.userFollow === 1 ? (
+            <CardHeader
+              avatar={
+                <Avatar
+                  className={classes.avatar}
+                  src={this.state.author_image}
+                  alt={`${this.state.currentPost.title}-user`}
+                />
+              }
+              action={deleteButton}
+              title={followedIcon}
+              subheader={dateCreate}
+              className={classes.followedAuthor}
+            />
+          ) : (
+            <CardHeader
+              avatar={
+                <Avatar
+                  className={classes.avatar}
+                  src={this.state.author_image}
+                  alt={`${this.state.currentPost.title}-user`}
+                />
+              }
+              action={deleteButton}
+              title={this.state.currentPost.title}
+              subheader={dateCreate}
+              className={classes.notFollowedAuthor}
+            />
+          )}
+
           <Typography
             variant="body2"
             color="textSecondary"
@@ -284,4 +336,11 @@ class OnePost extends Component {
   }
 }
 
-export default connect(null, {})(withStyles(styles)(OnePost));
+function mapStateToProps(state) {
+  const { user } = state.auth;
+  return {
+    user
+  };
+}
+
+export default connect(mapStateToProps, {})(withStyles(styles)(OnePost));

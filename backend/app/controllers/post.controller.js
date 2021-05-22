@@ -57,6 +57,8 @@ exports.allPosts = async (req, res, next) => {
 };
 
 exports.friendsPosts = async (req, res, next) => {
+  console.log('MON LOOOOOOOOG');
+
   try {
     let userId;
 
@@ -70,7 +72,7 @@ exports.friendsPosts = async (req, res, next) => {
 
     const allPostsDb = await Post.findAll({
       where: {
-        user_id: {
+        author: {
           [Sequelize.Op.not]: userId.user_id
         }
       },
@@ -85,6 +87,7 @@ exports.friendsPosts = async (req, res, next) => {
       ],
       raw: true
     });
+    console.log('MON LOOOOOOOOG',allPostsDb);
 
     Promise.all(allPostsDb).then((values) => {
       res.status(200).json(values);

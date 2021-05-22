@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { setMessage } from '../../../actions/message';
 import UserService from '../../../services/user.service';
 
-import { IconButton } from '@material-ui/core';
+import { Fab } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/styles';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -21,8 +21,7 @@ const styles = () => ({
   iconButton: {
     position: 'absolute',
     bottom: 5,
-    left: 10,
-    backgroundColor: '#fff'
+    left: 10
   }
 });
 
@@ -80,13 +79,14 @@ class ProfileDelete extends Component {
     return (
       <Fragment>
         {this.state.editable === true && (
-          <IconButton
-            aria-label="delete"
+          <Fab
+            color="secondary"
+            className={(classes.fab, classes.iconButton)}
             onClick={this.deleteUserProfile}
-            className={classes.iconButton}
+            size="small"
           >
             <DeleteForeverIcon className={classes.editIconField} />
-          </IconButton>
+          </Fab>
         )}
       </Fragment>
     );

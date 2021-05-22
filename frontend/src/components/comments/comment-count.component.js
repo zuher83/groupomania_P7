@@ -16,7 +16,7 @@ class CommentsCount extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { comments: {} };
+    this.state = { commentList: [] };
   }
 
   /**
@@ -32,7 +32,7 @@ class CommentsCount extends Component {
         .retrieveComments(this.props.post)
         .then((result) => {
           if (this._isMounted) {
-            this.setState({ comments: result });
+            this.setState({ commentList: result });
           }
         })
         .catch((e) => {
@@ -53,7 +53,7 @@ class CommentsCount extends Component {
    */
   render() {
     return (
-      <Fragment key={this.props.post}>{this.state.comments.length}</Fragment>
+      <Fragment key={this.props.post}>{this.state.commentList.length}</Fragment>
     );
   }
 }
@@ -65,7 +65,7 @@ class CommentsCount extends Component {
 //   };
 // }
 const mapStateToProps = (state) => ({
-  comment: state.comment
+  commentList: state.comment
 });
 
 CommentsCount.propTypes = {

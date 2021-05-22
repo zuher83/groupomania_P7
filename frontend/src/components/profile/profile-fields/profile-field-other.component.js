@@ -37,11 +37,11 @@ class ProfileSettings extends Component {
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
 
     this.state = {
-      user_id: this.props.user_id.user_id,
-      name: this.props.user_id.name,
-      last_name: this.props.user_id.last_name,
-      email: this.props.user_id.email,
-      password: this.props.user_id.password,
+      user_id: '',
+      name: '',
+      last_name: '',
+      email: '',
+      password: '',
 
       editable: false,
       form_valid: false,
@@ -50,14 +50,38 @@ class ProfileSettings extends Component {
   }
 
   componentDidMount() {
-    if (this.props.bio) {
-      this.setState({ bio: this.props.bio });
-    }
+    this.setState({
+      user_id: this.props.user_id
+    });
+
     const userViewer = JSON.parse(localStorage.getItem('user'));
     if (userViewer.user_id === this.props.user_id.user_id) {
       this.setState({
+        name: this.props.user_id.name,
+        last_name: this.props.user_id.last_name,
+        email: this.props.user_id.email,
+        password: this.props.user_id.password,
         editable: true
       });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.user_id !== this.props.user_id) {
+      this.setState({
+        user_id: this.props.user_id,
+        name: this.props.user_id.name,
+        last_name: this.props.user_id.last_name,
+        email: this.props.user_id.email,
+        password: this.props.user_id.password
+      });
+
+      const userViewer = JSON.parse(localStorage.getItem('user'));
+      if (userViewer.user_id === this.props.user_id.user_id) {
+        this.setState({
+          editable: true
+        });
+      }
     }
   }
 
@@ -94,19 +118,22 @@ class ProfileSettings extends Component {
   async handleFormSubmit() {
     event.preventDefault();
     var datas = {
-      bio: this.state.bio
+      name: this.state.name,
+      last_name: this.state.last_name,
+      email: this.state.email,
+      password: this.state.password
     };
     this.props
-      .editProfile(this.props.user_id, datas)
+      .editProfile(this.state.user_id.user_id, datas)
       .then(() => {
         this.handleClose();
         this.props.setMessage({
-          message: 'Votre biographie est mis à jour!'
+          message: 'Votre compte est mis à jour!'
         });
       })
       .catch(() => {
         this.props.setMessage({
-          message: 'Impossible de mettre à jour votre biographie!!',
+          message: 'Impossible de mettre à jour votre compte!!',
           severity: 'error'
         });
       });
@@ -134,7 +161,7 @@ class ProfileSettings extends Component {
           onClick={this.handleClickOpen}
         >
           <b>
-            {this.state.name} {this.state.last_name}
+            {this.state.user_id.name} {this.state.user_id.last_name}
           </b>
           {this.state.editable === true && (
             <SettingsIcon

@@ -1,7 +1,8 @@
 import axios from 'axios';
-import authHeader from './auth-header';
+import authHeader from './auth-header.service';
+import * as constant from '../constants/url.constant';
 
-const API_URL = 'http://localhost:3000/api/';
+const API_URL = constant.API_URL;
 
 class UserService {
   getPublicContent() {
