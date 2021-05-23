@@ -4,6 +4,7 @@ import { deleteUser } from '../../../actions/auth';
 import PropTypes from 'prop-types';
 
 import { setMessage } from '../../../actions/message';
+import { history } from '../../../helpers/history';
 import UserService from '../../../services/user.service';
 
 import { Fab } from '@material-ui/core';
@@ -67,6 +68,8 @@ class ProfileDelete extends Component {
         if (this.state.userViewer === this.props.user_id.user_id) {
           localStorage.removeItem('user');
           location.reload();
+        } else {
+          history.push('/users');
         }
       })
       .catch((err) => {
