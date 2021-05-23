@@ -57,8 +57,6 @@ exports.allPosts = async (req, res, next) => {
 };
 
 exports.friendsPosts = async (req, res, next) => {
-  console.log('MON LOOOOOOOOG');
-
   try {
     let userId;
 
@@ -87,8 +85,6 @@ exports.friendsPosts = async (req, res, next) => {
       ],
       raw: true
     });
-    console.log('MON LOOOOOOOOG',allPostsDb);
-
     Promise.all(allPostsDb).then((values) => {
       res.status(200).json(values);
     });
