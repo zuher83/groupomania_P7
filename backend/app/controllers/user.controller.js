@@ -1,6 +1,7 @@
 const config = require('../config/auth.config');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
+const fs = require('fs');
 
 const Sequelize = require('sequelize');
 
@@ -98,7 +99,7 @@ exports.userGet = async (req, res, next) => {
   }
 };
 
-exports.userUpdate = (req, res, next) => {
+exports.userUpdate = async (req, res, next) => {
   const id = req.params.id;
   var datas = req.body;
 
@@ -113,6 +114,18 @@ exports.userUpdate = (req, res, next) => {
       var datas = {
         image_cover: req.file.filename
       };
+    }
+  }
+
+  if (datas.image) {
+    const userGetImage = await User.findByPk(id);
+
+    if (userGetImage.image) {
+      fs.unlink(`backend/public/images/${userGetImage.image}`, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
     }
   }
 
@@ -161,13 +174,23 @@ exports.userDelete = async (req, res) => {
   }
 
   if (userId !== currentUser.user_id || currentUserRole.roleId === 3) {
+    const deletUser = await User.findByPk(userId);
     try {
       User.destroy({
         where: { user_id: userId }
+      }).then((val) => {
+        if (deletUser.image) {
+          fs.unlink(`backend/public/images/${deletUser.image}`, (err) => {
+            if (err) {
+              res.status(500).json({ message: err });
+            }
+          });
+        }
       });
+
       res.status(200).json({ message: 'Profile supprimé' });
     } catch (err) {
-      next(err);
+      res.status(500).json({ message: err });
     }
   }
 };
