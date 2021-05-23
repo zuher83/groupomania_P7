@@ -40,6 +40,14 @@ class LikeUnlike extends Component {
     }
   }
 
+  // componentDidUpdate(prevState, prevProps) {
+  //   console.log(prevState, prevProps);
+  //   if (this.state)
+  //   // if (this.props.postId) {
+  //   //   this.getLikes(this.props.postId);
+  //   // }
+  // }
+
   getLikes(postId) {
     this.props
       .getLikes(postId)

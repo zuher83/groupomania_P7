@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import { retrieveComments } from '../../actions/comment';
+import ContentService from '../../services/content.service';
 
 /**
  * Affiche une liste des commentaires sur chaque post
- * Component à appeler avec une prop postId
+ * Component à appeler avec une prop post
  *
  * @class CommentsCount
  * @extends {Component}
@@ -16,7 +17,9 @@ class CommentsCount extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { commentList: [] };
+    this.countComment = this.countComment.bind(this);
+
+    this.state = { commentList: [], count_comment: 0 };
   }
 
   /**
@@ -27,17 +30,24 @@ class CommentsCount extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-    if (this.props.post) {
-      this.props
-        .retrieveComments(this.props.post)
-        .then((result) => {
-          if (this._isMounted) {
-            this.setState({ commentList: result });
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+    this.countComment(this.props.post);
+  }
+
+  countComment(post) {
+    ContentService.countComments(post)
+      .then((result) => {
+        if (this._isMounted) {
+          this.setState({ count_comment: result.data });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.commentList !== this.props.commentList) {
+      this.countComment(this.props.post);
     }
   }
 
@@ -52,18 +62,16 @@ class CommentsCount extends Component {
    * @memberof CommentsCount
    */
   render() {
-    return (
-      <Fragment key={this.props.post}>{this.state.commentList.length}</Fragment>
-    );
+    if (this.state.count_comment !== 0) {
+      return (
+        <Fragment key={this.props.post}>{this.state.count_comment}</Fragment>
+      );
+    } else {
+      return <Fragment key={this.props.post}>0</Fragment>;
+    }
   }
 }
 
-// function mapStateToProps(state) {
-//   const { comment } = state.comment;
-//   return {
-//     comment_count: comment
-//   };
-// }
 const mapStateToProps = (state) => ({
   commentList: state.comment
 });
@@ -73,4 +81,3 @@ CommentsCount.propTypes = {
 };
 
 export default connect(mapStateToProps, { retrieveComments })(CommentsCount);
-// export default connect(null, { countComments })(CommentsCount);

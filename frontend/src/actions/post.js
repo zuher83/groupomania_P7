@@ -117,14 +117,9 @@ export const getLikes = (postId) => async (dispatch) => {
   }
 };
 
-export const likeUnlike = (postId, state) => async (dispatch) => {
+export const likeUnlike = (postId) => async (dispatch) => {
   try {
-    let res;
-    if (state === 0) {
-      res = await ContentService.likeUnlikePost(postId);
-    } else {
-      res = await ContentService.likeUnlikeDelete(postId);
-    }
+    const res = await ContentService.likeUnlikePost(postId);
 
     dispatch({
       type: UPDATE_LIKE_UNLIKE,

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { clearMessage } from './../actions/message';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -24,6 +25,7 @@ class DisplayMessage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: Math.floor(Math.random() * 510000),
       open: false,
       message: '',
       severity: 'success'
@@ -50,7 +52,7 @@ class DisplayMessage extends Component {
 
     return (
       <Fragment>
-        <div className={classes.root} key={this.props.message}>
+        <div className={classes.root} key={this.state.id}>
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             open={this.state.open}
@@ -71,4 +73,6 @@ DisplayMessage.propTypes = {
   message: PropTypes.string.isRequired
 };
 
-export default connect(null, {})(withStyles(styles)(DisplayMessage));
+export default connect(null, { clearMessage })(
+  withStyles(styles)(DisplayMessage)
+);

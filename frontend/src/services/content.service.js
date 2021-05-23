@@ -73,12 +73,6 @@ class ContentService {
     });
   }
 
-  likeUnlikeDelete(postId) {
-    return axios.delete(API_URL + `posts-likes/${postId.post}`, {
-      headers: authHeader()
-    });
-  }
-
   getLikes(postId) {
     return axios.get(API_URL + `posts-likes/${postId}`, {
       headers: authHeader()

@@ -17,9 +17,4 @@ module.exports = function (app) {
     likeController.getLikes
   );
   app.post('/api/posts-likes', [authJwt.verifyToken], likeController.postLike);
-  app.delete(
-    '/api/posts-likes/:id',
-    [authJwt.verifyToken],
-    likeController.postUnLike
-  );
 };
