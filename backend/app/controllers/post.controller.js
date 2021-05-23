@@ -1,12 +1,12 @@
 const config = require('../config/auth.config');
 var jwt = require('jsonwebtoken');
+const fs = require('fs');
 const db = require('../models/index');
 const Post = db.posts;
 const Like = db.likes;
 const User = db.users;
 const Comment = db.comments;
 const Follow = db.follow_user;
-
 
 exports.createPost = async (req, res, next) => {
   let userId;
@@ -140,8 +140,19 @@ exports.updatePost = async (req, res, next) => {
 
 exports.deletePost = async (req, res, next) => {
   try {
+    const post = await Post.findByPk(req.params.id);
+    const image = post.image;
+
     const result = await Post.destroy({
       where: { post_id: req.params.id }
+    }).then((val) => {
+      if (image) {
+        fs.unlink(`backend/public/images/${image}`, (err) => {
+          if (err) {
+            res.status(500).json({ message: err });
+          }
+        });
+      }
     });
     res.status(200).json(result);
   } catch (err) {
