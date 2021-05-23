@@ -178,4 +178,4 @@ node_modules
 app/.eslintrc.json
 .env
 memo.txt
-backend/public/*
+# backend/public/*
