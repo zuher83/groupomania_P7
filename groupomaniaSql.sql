@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS `comments` (
   PRIMARY KEY (`comment_id`),
   KEY `user_relation_comment` (`user_id`) USING BTREE,
   KEY `post_relation_comment` (`post_id`) USING BTREE,
-  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Listage des données de la table groupomania3.comments : ~0 rows (environ)
@@ -37,8 +37,9 @@ CREATE TABLE IF NOT EXISTS `follow_user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_index` (`user_id`,`follower_id`) USING BTREE,
   KEY `user_relation_follow` (`follower_id`) USING BTREE,
-  CONSTRAINT `follow_user_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `follow_user_ibfk_2` FOREIGN KEY (`follower_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  KEY `user_relation_followed` (`user_id`),
+  CONSTRAINT `follow_user_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `follow_user_ibfk_2` FOREIGN KEY (`follower_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Listage des données de la table groupomania3.follow_user : ~0 rows (environ)
@@ -54,8 +55,8 @@ CREATE TABLE IF NOT EXISTS `likes` (
   PRIMARY KEY (`like_id`),
   KEY `user_relation_like` (`like_by`) USING BTREE,
   KEY `post_relation_like` (`post_id`) USING BTREE,
-  CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`like_by`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`like_by`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Listage des données de la table groupomania3.likes : ~0 rows (environ)
@@ -71,7 +72,9 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `post_created` datetime NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`post_id`),
-  KEY `post_id` (`post_id`) USING BTREE
+  KEY `post_id` (`post_id`) USING BTREE,
+  KEY `author_relation` (`author`),
+  CONSTRAINT `author_relation` FOREIGN KEY (`author`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Listage des données de la table groupomania3.posts : ~0 rows (environ)
@@ -113,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Listage des données de la table groupomania3.users : ~1 rows (environ)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`user_id`, `name`, `last_name`, `email`, `password`, `joined`, `image`, `cover_image`, `work_department`, `bio`, `birth_date`) VALUES
-	(1, 'admin', 'admin', 'admin', '$2a$08$qiKFNfWM7R0v9GWjaA7mx.pWGgFPlG79xQAPGcRS0MeHeeivVWDNi', '2021-05-07 10:09:33', NULL, NULL, NULL, NULL, NULL);
+	(1, 'Admin', 'Groupomania', 'admin@groupomania.com', '$2a$08$qiKFNfWM7R0v9GWjaA7mx.pWGgFPlG79xQAPGcRS0MeHeeivVWDNi', '2021-05-07 10:09:33', '', NULL, 'Administrateur Informatique', 'Informaticien chez Groupomania depuis 5 ans, je m\'occupe du développement du numérique', '1985-05-07');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 -- Listage de la structure de la table groupomania3. user_roles
